@@ -1,0 +1,330 @@
+
+Extract the values from this pdf and put them inside a JSON array where the objects have the keys "analysis", "result", "range_min", "range_max". Respond just with the JSON object, no other text.
+```
+Synevo Romania SRL
+
+B-dul Pache Protopopescu 81, Et.2,
+Cam.3 Bucuresti
+
+\
+“
+
+acreditat pentra
+ANALIZE MEDICALE
+
+Punct recoltare:
+lasi - Receptie Pacurari
+
+Telefon: 0232706583
+
+Telefon: 0232 219971 Adresa: Str. Pacurari 113, bloc 603, tr Il,
+
+Site: www.synevo.ro; C sy n evo parter SREN ISO 15189:2013
+
+Cod doc: F01-PG-15 v2.0 CERTIFICAT DE ACREDITARE
+LM 04s
+
+Buletin analize medicale
+
+win
+
+Nume pacient: Stoica Cod de bare: 2001534929
+Prenume pacient: Tedy Recoltat: Internal
+Data nasterii: 14/04/2003 Numarcerere: 10003543108
+CNP: 5030414226720 Data inregistrarii: 13/12/2022
+Varsta: 19 ani 7 luni Data recoltarii: 13/12/2022 07:52
+Sex: M ; ; Data rezultat: 13/12/2022 15:00
+Adresa: » Iasi - lasi Contract: IS - CAS MEDICINA DE
+Telefon: 0754972177 FAMII IF
+Inregistrat la: lasi - Receptie Pacurari
+Doctor: Albut Mihaela Daniela
+
+Valori in afara limitelor admise
+pentru varsta si sexul respectiv
+
+L__]
+
+Rezultat UM
+
+Denumire Interval de referinta
+
+Hematologie
+
+LLIS
+
+Hemograma cu formula leucocitara cu Hb, Ht si
+indici
+Sange EDTA / metode: focusare hidrodinamica,
+citometrie in flux, SLS-Hb
+Numar leucocite 5.59 mii/pL 4-10
+Numar eritrocite 5.15 mil./uL 4.3-5.7
+Hemoglobina {Hb} 15.4 g/dL 13.2 - 17.3
+Hematocrit 46.9 % 39-49
+Volum eritrocitar mediu {VEM} 91.1 fL 80 - 99
+Hemoglobina eritrocitara medie {HEM} 29.9 pg/cell 27 - 34
+Concentratie medie a Hb/eritrocit 32.8 g/dL 32 - 37
+Largimea distributiei eritrocitare 12 % 11.6 - 14.8
+Numar trombocite 293 mii/uL 150 - 450
+Volum trombocitar mediu {VTM} 10.4 fL 74-13
+Largimea distributiei trombocitare 12.5 fL 8-16.5
+Neutrofil % 45 - 80
+Neutrofil 2.32 mii/uL 2-8
+Limfocit 44.7 % 20-55
+Limfocit 2.5 mii/uL 1-4
+Monocit 10.6 % <15
+Monocit 0.59 mii/pL 0.3-1
+Eozinofil 2.7 % <7
+Eozinofil 0.15 mii/uL 0.05 - 0.7
+Bazofil 0.5 % <2
+Bazofil 0.03 mii/uL <0.2
+Biochimie
+
+LLIS  Creatinina serica
+
+Ser/Metoda kinetica colorimetrica
+Jaffe/spectrofotometrie
+
+Este interzisa reproducerea partiala sau totala a buletinului de analize medicale. Rezultatele se vor interpreta in context clinic de catre medic.
+
+Pagina 1 din 4 Tiparit la: 12/13/2022 9:32:28PM
+
+
+acreditat pentra
+ANALIZE MEDICALE
+
+B-dul Pache Protopopescu 81, Et.2, \ lasi - Receptie Pacurari
+
+Cam.3 Bucuresti Ad Telefon: 0232706583
+Telefon: 0232 219971 Adresa: Str. Pacurari 113, bloc 603, tr Il,
+
+Site: www.synevo.ro; C sy n evo parter SREN ISO 15189:2013
+
+Cod doc: F01-PG-15 v2.0 CERTIFICAT DE ACREDITARE
+LM 04s
+
+Synevo Romania SRL Punct recoltare:
+
+Buletin analize medicale
+
+win
+
+Nume pacient: Stoica Cod de bare: 2001534929
+Prenume pacient: Tedy Recoltat: Internal
+Data nasterii: 14/04/2003 Numarcerere: 10003543108
+CNP: 5030414226720 Data inregistrarii: 13/12/2022
+Varsta: 19 ani 7 luni Data recoltarii: 13/12/2022 07:52
+Sex: M Data rezultat: 13/12/2022 15:00
+Adresa: »_ lasi- lasi Contract: IS - CAS MEDICINA DE
+Telefon: 0754972177 FAMII IF
+Inregistrat la: lasi - Receptie Pacurari
+Doctor: Albut Mihaela Daniela
+Valori in afara limitelor admise
+L pentru varsta si sexul respectiv
+
+Rezultat Interval de referinta
+
+LLIS — Alaninaminotransferaza (GPT/ALAT/ALT)
+
+Ser/Metoda kinetica IFCC fara piridoxal 21.4 U/L <41
+fosfat/spectrofotometrie
+
+LLIS  Aspartataminotransferaza (GOT/ASAT/AST)
+
+Ser/Metoda kinetica IFCC fara piridoxal 16.9 U/L <40
+fosfat/spectrofotometrie
+
+LLIS — Colesterol total
+
+Ser/metoda enzimatica - colorimetrica / 150.4 mg/dL Conform NCEP ATP III:
+spectrofotometrie - optim: <200
+- borderline crescut: 200-240
+- crescut: > 240
+
+LLIS — Uree serica
+
+Ser /Metoda kinetica / spectrofotometrie
+Urea 29.1 mg/dL < 43
+* Urea nitrogen (BUN) 14 mg/dL < 20
+
+LLIS  Trigliceride
+
+Ser/metoda enzimatica -
+colorimetrica/spectrofotometrie
+Trigliceride 53.6 mg/dL Conform NCEP ATP III:
+- optim: < 150
+- borderline crescut: 150-199
+- crescut: 200-499
+
+- foarte crescut: = 500
+
+Colesterol VLDL (calculat) 1 mg/dL <30
+
+LLIS  Glucoza serica
+
+Ser /metoda enzimatica - colorimetrica / 92 mg/dL Interpretare valori
+spectrofotometrie glicemie bazala (recomandari ADA):
+60-99: Normal
+
+100-125: Glicemie bazala modificata
+2126: Diabet zaharat
+Diagnosticul de diabet zaharat se va
+stabili pe baza a cel putin 2 valori
+crescute = 126 ale glicemiei bazale
+obtinute in zile diferite.
+
+Este interzisa reproducerea partiala sau totala a buletinului de analize medicale. Rezultatele se vor interpreta in context clinic de catre medic.
+
+Pagina 2din 4 Tiparit la: 12/13/2022 9:32:28PM
+
+
+acreditat pentra
+ANALIZE MEDICALE
+
+B-dul Pache Protopopescu 81, Et.2, \ lasi - Receptie Pacurari
+
+Cam.3 Bucuresti Ad Telefon: 0232706583
+Telefon: 0232 219971 Adresa: Str. Pacurari 113, bloc 603, tr Il,
+
+Site: www.synevo.ro; C sy n evo parter SREN ISO 15189-2013
+
+Cod doc: F01-PG-15 v2.0 CERTIFICAT DE ACREDITARE
+LM 04s
+
+Synevo Romania SRL Punct recoltare:
+
+Buletin analize medicale
+
+Nume pacient: Stoica Cod de bare: 2001534929
+Prenume pacient: Tedy Recoltat: Internal
+Data nasterii: 14/04/2003 Numarcerere: 10003543108
+CNP: 5030414226720 Data inregistrarii: 13/12/2022
+Varsta: 19 ani 7 luni Data recoltarii: 13/12/2022 07:52
+Sex: M Data rezultat: 13/12/2022 15:00
+Adresa: »_ lasi- lasi Contract: IS - CAS MEDICINA DE
+Telefon: 0754972177 FAMII IF
+Inregistrat la: lasi - Receptie Pacurari
+Doctor: Albut Mihaela Daniela
+
+CL] Valori in afara limitelor admise
+pentru varsta si sexul respectiv
+
+LLIS  Magneziu seric
+
+Ser / Metoda: colorimetrica/Spectrofotometrie | mg/dL. 1.7-2.2
+
+Ser / Spectrofotometrie - metoda colorimetrica 131.84 g/dL 33 - 193
+
+Imunochimie
+
+LLIS — Feritina
+
+Ser /electrochemiluminiscenta (ECLIA) 115.8 ng/mL 0-1 ani: 12 - 327 ng/mL
+1 - 4 ani: 6 - 67 ng/mL
+4-7 ani: 4 - 67 ng/mL
+Fete:
+7 - 13 ani -7 - 84 ng/mL
+13 - 18 ani — 13 - 68 ng/mL
+Baieti:
+7-13 ani - 14 - 124 ng/mL
+13 - 18 ani — 14 - 152 ng/mL
+Femei: > 18 ani — 13 - 150 ng/mL
+Barbati: > 18 ani: 30 - 400 ng/mL
+Sarcina; boala intestinala inflamatorie;
+boala renala cronica si insuficienta
+cardiaca: > 100 ng/mL
+
+Biochimie
+Calciu ionic
+
+LLIS — Calciu ionic
+
+Ser/ test calculat / spectrofotometrie 4.12 mg/dL 3.82 - 4.82
+
+LLIS  Calciu seric
+
+Ser / Metoda colorimetrica/Spectrofotometrie 9.82 mg/dL 8.6 - 10
+
+LLIS _ Proteine totale serice
+
+Ser / Metoda colorimetrica / spectrofotometrie 7.67 g/dL 6.6 - 8.7
+
+ie si sediment
+
+LLIS — Urina - biochimie
+
+Urina / metoda fotometrica (pe strip)/reflectometrie
+
+Este interzisa reproducerea partiala sau totala a buletinului de analize medicale. Rezultatele se vor interpreta in context clinic de catre medic.
+
+Pagina 3din 4 Tiparit la: 12/13/2022 9:32:28PM
+
+
+acreditat pentra
+
+Synev nia SRL :
+y’ 1o Roma Punct recoltare: ANALIZE MEDICALE
+
+B-dul Pache Protopopescu 81, Et.2, \ lasi - Receptie Pacurari
+Cam.3 Bucuresti Ad Telefon: 0232706583
+Telefon: 0232 219971 Adresa: Str. Pacurari 113, bloc 603, tr II,
+
+Site: www.synevo.ro; C sy n evo parter SREN ISO 15189:2013
+
+Cod doc: F01-PG-15 v2.0 CERTIFICAT DE ACREDITARE
+LM 04s
+
+Buletin analize medicale
+
+Nume pacient: Stoica Cod de bare: 2001534929
+Prenume pacient: Tedy Recoltat: Internal
+Data nasterii: 14/04/2003 Numarcerere: 10003543108
+CNP: 5030414226720 Data inregistrarii: 13/12/2022
+Varsta: 19 ani 7 luni Data recoltarii: 13/12/2022 07:52
+Sex: M Data rezultat: 13/12/2022 15:00
+Adresa: »_ lasi- lasi Contract: IS - CAS MEDICINA DE
+Telefon: 0754972177 FAMII IF
+Inregistrat la: lasi - Receptie Pacurari
+Doctor: Albut Mihaela Daniela
+Valori in afara limitelor admise
+L pentru varsta si sexul respectiv
+
+Rezultat Interval de referinta
+
+LLIS — Urina - biochimie
+
+Urina / metoda fotometrica (pe strip)/reflectometrie
+
+densitate 1.025 1.015 - 1.025
+pH 5 48-74
+nitriti negativ negativ
+leucocite (esteraza granulocitara) negativ /uL negativ
+proteine <10 mg/dL <10
+glucoza nedecelabil mg/dL nedecelabil
+corpi cetonici negativ mg/dL negativ
+urobilinogen normal mg/dL normal
+bilirubina negativ mg/dL negativ
+hematii (hemoglobina) negativ Jul negativ
+
+LLIS —_Urina - sediment
+
+Urina / examen microscopic
+Leucocite 1-4 /hpf 1-4
+
+Celule epiteliale scuamoase 1-15 /hpf 1-15
+
+Suma analizelor de pe buletinul actual este 125.69 lei aferent contractului IS - CAS MEDICINA DE FAMILIE.
+
+Medic de laborator
+
+Rezultat eliberat in: Laborator lasi
+LLIS - Efectuat in:Laborator lasi, str.Str. lordachi Lozonschi nr.4, lasi - lasi
+
+*Activitatea de recoltare si examinarile marcate nu sunt acoperite de acreditarea RENAR. Pentru detalii suplimentare va rugam sa accesati site-ul
+www.renar.ro.
+Opiniile si interpretarile continute de prezentul raport nu sunt acoperite de acreditarea RENAR.
+
+Este interzisa reproducerea partiala sau totala a buletinului de analize medicale. Rezultatele se vor interpreta in context clinic de catre medic.
+
+Pagina 4din 4 Tiparit la: 12/13/2022 9:32:28PM
+
+```

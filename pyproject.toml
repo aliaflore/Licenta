@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "licenta"
+version = "0.1.0"
+description = ""
+authors = ["aliaflore <100151385+aliaflore@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pdfplumber = "^0.11.0"
+pytesseract = "^0.3.10"
+pdf2image = "^1.17.0"
+numpy = "^1.26.4"
+matplotlib = "^3.8.4"
+opencv-python = "^4.9.0.80"
+python-dotenv = "^1.0.1"
+openai = "^1.23.6"
+pypdf2 = "^3.0.1"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

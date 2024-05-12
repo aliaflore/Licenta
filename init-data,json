@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "nume": "Alaninaminotransferaza",
+        "minim_varsta": 0,
+        "maxim_varsta": 12,
+        "minim": 0,
+        "maxim": 71,
+        "tip": "interval"
+    },
+    {
+        "id": 2,
+        "nume": "Alaninaminotransferaza",
+        "minim_varsta": 0,
+        "maxim_varsta": 12,
+        "minim": 0,
+        "maxim": 71,
+        "tip": "interval"
+    },
+    {
+        "nume": "Alaninaminotransferaza",
+        "tip": "boolean",
+        "boolean": true
+    }
+]

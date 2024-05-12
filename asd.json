@@ -1,0 +1,250 @@
+{
+    "results": [
+        {
+            "analysis": "Numar leucocite",
+            "result": "5.59 mii/pL",
+            "range_min": "4",
+            "range_max": "10"
+        },
+        {
+            "analysis": "Numar eritrocite",
+            "result": "5.15 mil./uL",
+            "range_min": "4.3",
+            "range_max": "5.7"
+        },
+        {
+            "analysis": "Hemoglobina",
+            "result": "15.4 g/dL",
+            "range_min": "13.2",
+            "range_max": "17.3"
+        },
+        {
+            "analysis": "Hematocrit",
+            "result": "46.9 %",
+            "range_min": "39",
+            "range_max": "49"
+        },
+        {
+            "analysis": "Volum eritrocitar mediu",
+            "result": "91.1 fL",
+            "range_min": "80",
+            "range_max": "99"
+        },
+        {
+            "analysis": "Hemoglobina eritrocitara medie",
+            "result": "29.9 pg/cell",
+            "range_min": "27",
+            "range_max": "34"
+        },
+        {
+            "analysis": "Concentratie medie a Hb/eritrocit",
+            "result": "32.8 g/dL",
+            "range_min": "32",
+            "range_max": "37"
+        },
+        {
+            "analysis": "Largimea distributiei eritrocitare",
+            "result": "12 %",
+            "range_min": "11.6",
+            "range_max": "14.8"
+        },
+        {
+            "analysis": "Numar trombocite",
+            "result": "293 mii/uL",
+            "range_min": "150",
+            "range_max": "450"
+        },
+        {
+            "analysis": "Volum trombocitar mediu",
+            "result": "10.4 fL",
+            "range_min": "7.4",
+            "range_max": "13"
+        },
+        {
+            "analysis": "Largimea distributiei trombocitare",
+            "result": "12.5 fL",
+            "range_min": "8",
+            "range_max": "16.5"
+        },
+        {
+            "analysis": "Neutrofil",
+            "result": "2.32 mii/uL",
+            "range_min": "2",
+            "range_max": "8"
+        },
+        {
+            "analysis": "Limfocit",
+            "result": "2.5 mii/uL",
+            "range_min": "1",
+            "range_max": "4"
+        },
+        {
+            "analysis": "Monocit",
+            "result": "0.59 mii/pL",
+            "range_min": "0.3",
+            "range_max": "1"
+        },
+        {
+            "analysis": "Eozinofil",
+            "result": "0.15 mii/uL",
+            "range_min": "0.05",
+            "range_max": "0.7"
+        },
+        {
+            "analysis": "Bazofil",
+            "result": "0.03 mii/uL",
+            "range_min": "<0.2",
+            "range_max": null
+        },
+        {
+            "analysis": "Alaninaminotransferaza (GPT/ALAT/ALT)",
+            "result": "21.4 U/L",
+            "range_min": null,
+            "range_max": "<41"
+        },
+        {
+            "analysis": "Aspartataminotransferaza (GOT/ASAT/AST)",
+            "result": "16.9 U/L",
+            "range_min": null,
+            "range_max": "<40"
+        },
+        {
+            "analysis": "Creatinina serica",
+            "result": "1.94 mg/dL",
+            "range_min": "≤1.3",
+            "range_max": null
+        },
+        {
+            "analysis": "Uree serica",
+            "result": "29.1 mg/dL",
+            "range_min": null,
+            "range_max": "<43"
+        },
+        {
+            "analysis": "Urea nitrogen (BUN)",
+            "result": "14 mg/dL",
+            "range_min": null,
+            "range_max": "<20"
+        },
+        {
+            "analysis": "Colesterol total",
+            "result": "150.4 mg/dL",
+            "range_min": "optimal: <200",
+            "range_max": "crescut: >240"
+        },
+        {
+            "analysis": "Trigliceride",
+            "result": "53.6 mg/dL",
+            "range_min": "optim: <150",
+            "range_max": "foarte crescut: >=500"
+        },
+        {
+            "analysis": "Colesterol VLDL (calculat)",
+            "result": "1 mg/dL",
+            "range_min": null,
+            "range_max": "<30"
+        },
+        {
+            "analysis": "Glucoza serica",
+            "result": "92 mg/dL",
+            "range_min": "60",
+            "range_max": ">126"
+        },
+        {
+            "analysis": "Magneziu seric",
+            "result": "1.7-2.2 mg/dL",
+            "range_min": "1.7",
+            "range_max": "2.2"
+        },
+        {
+            "analysis": "Feritina",
+            "result": "115.8 ng/mL",
+            "range_min": "Barbati: >18 ani: 30",
+            "range_max": "400"
+        },
+        {
+            "analysis": "Calciu ionic",
+            "result": "4.12 mg/dL",
+            "range_min": "3.82",
+            "range_max": "4.82"
+        },
+        {
+            "analysis": "Calciu seric",
+            "result": "9.82 mg/dL",
+            "range_min": "8.6",
+            "range_max": "10"
+        },
+        {
+            "analysis": "Proteine totale serice",
+            "result": "7.67 g/dL",
+            "range_min": "6.6",
+            "range_max": "8.7"
+        },
+        {
+            "analysis": "Urina densitate",
+            "result": "1.025",
+            "range_min": "1.015",
+            "range_max": "1.025"
+        },
+        {
+            "analysis": "Urina pH",
+            "result": "5",
+            "range_min": "4.8",
+            "range_max": "7.4"
+        },
+        {
+            "analysis": "Urina leucocite",
+            "result": "negativ",
+            "range_min": "negativ",
+            "range_max": null
+        },
+        {
+            "analysis": "Urina proteine",
+            "result": "<10 mg/dL",
+            "range_min": null,
+            "range_max": "<10"
+        },
+        {
+            "analysis": "Urina glucoza",
+            "result": "nedecelabil",
+            "range_min": "nedecelabil",
+            "range_max": null
+        },
+        {
+            "analysis": "Urina corpi cetonici",
+            "result": "negativ",
+            "range_min": "negativ",
+            "range_max": null
+        },
+        {
+            "analysis": "Urina urobilinogen",
+            "result": "normal",
+            "range_min": "normal",
+            "range_max": null
+        },
+        {
+            "analysis": "Urina bilirubina",
+            "result": "negativ",
+            "range_min": "negativ",
+            "range_max": null
+        },
+        {
+            "analysis": "Urina hematii",
+            "result": "negativ",
+            "range_min": "negativ",
+            "range_max": null
+        },
+        {
+            "analysis": "Leucocite in urina",
+            "result": "1-4 /hpf",
+            "range_min": "1-4",
+            "range_max": null
+        },
+        {
+            "analysis": "Celule epiteliale scuamoase in urina",
+            "result": "1-15 /hpf",
+            "range_min": "1-15",
+            "range_max": null
+        }
+    ]
+}
