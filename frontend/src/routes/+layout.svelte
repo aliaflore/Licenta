@@ -26,7 +26,7 @@
 						<span><History size={30} /></span>
 						<span>Istoricul datelor</span>
 					</a>
-					<a href="/" class="btn btn-sm variant-ghost-surface">
+					<a href="/logout" class="btn btn-sm variant-ghost-surface">
 						<span><AccountOff size={30} /></span>
 						<span>Iesire din cont</span>
 					</a>
