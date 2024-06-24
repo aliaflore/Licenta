@@ -62,6 +62,7 @@ class RadiografiePDFViewSet(
 ):
     queryset = RadiografiePDF.objects.all()
     serializer_class = RadiografiePDFSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
@@ -74,6 +75,7 @@ class AnalizeViewSet(
 ):
     queryset = Analize.objects.all()
     serializer_class = AnalizeSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
@@ -86,6 +88,7 @@ class AnalizeRezultateViewSet(
 ):
     queryset = AnalizeRezultate.objects.all()
     serializer_class = AnalizeRezultateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return super().get_queryset().filter(analysis__user=self.request.user)
@@ -118,6 +121,8 @@ class HistoryViewSet(viewsets.ViewSet):
                         "range_min": analiza.range_min,
                         "range_max": analiza.range_max,
                         "expected": analiza.expected,
+                        "measurement_unit": analiza.measurement_unit,
+                        "suggestion": analiza.suggestion,
                     }
                 )
             results.append(d)

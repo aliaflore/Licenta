@@ -43,6 +43,7 @@ class AnalizeRezultateSerializer(serializers.HyperlinkedModelSerializer):
             "expected",
             "measurement_unit",
             "analysis",
+            "suggestion"
         )
 
 

@@ -8,18 +8,32 @@ type User = {
     id: number;
 };
 
-export const load: LayoutServerLoad = async ({ fetch, url }) => {
+type Error = {
+    error: string;
+};
 
+type UserResult = {
+    user: User;
+}
+
+type Result = UserResult & Error;
+
+export const load: LayoutServerLoad = async ({ fetch }) => {
     const response = (await fetch(
-        url.origin + '/api/users/me/',
+        '/api/users/me/',
         {
             method: 'GET',
         }
     ));
-    const result = await response.json() as any;
-    console.log(result);
+    const result = await response.json() as Result;
+    if (result?.error) {
+        return {
+            loggedIn: false,
+            user: null
+        }
+    }
     return {
-        loggedIn: !result?.error,
-        user: result?.user as User
+        loggedIn: true,
+        user: result.user
     };
 };

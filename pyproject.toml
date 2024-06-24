@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["aliaflore <100151385+aliaflore@users.noreply.github.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -29,6 +30,7 @@ python-decouple = "^3.8"
 eventlet = "^0.36.1"
 gevent = "^24.2.1"
 dj-rest-auth = {extras = ["with-social"], version = "^6.0.0"}
+watchdog = "^4.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.4"

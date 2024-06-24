@@ -61,6 +61,7 @@ class AnalizeRezultate(models.Model):
     range_max = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     expected = models.BooleanField(null=True)
     measurement_unit = models.CharField(max_length=10)
+    suggestion = models.TextField(null=True)
 
     analysis = models.ForeignKey(
         "Analize", on_delete=models.CASCADE, related_name="results"

@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 
+from openai import OpenAI
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-yq8em$ly3u&z^&=o=#v6_@a^(*4()tlo-9(9#n%59bqz@o=5hs"
@@ -126,3 +128,11 @@ EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = "Licenta Tuc <licentatuc@tedyst.ro>"
+
+OPENAPI_ORGANIZATION = os.getenv("OPENAPI_ORGANIZATION")
+OPENAPI_PROJECT = os.getenv("OPENAPI_PROJECT")
+OPENAPI_KEY = os.getenv("OPENAPI_KEY")
+
+OPENAPI_CLIENT = OpenAI(
+    organization=OPENAPI_ORGANIZATION, project=OPENAPI_PROJECT, api_key=OPENAPI_KEY
+)
