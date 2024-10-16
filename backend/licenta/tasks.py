@@ -1,87 +1,77 @@
+import logging
+from io import StringIO
+
+import pandas as pd
+import pymupdf
+import requests
 from celery import shared_task
 from django.conf import settings
-from licenta.models import AnalizePDF, Analize, AnalizeRezultate, User
-from licenta.extraction.text_extraction import createJSON
-import logging
-import datetime
+from django.db import transaction
+from licenta.extraction.all import extract_data_from_pdf
+from licenta.extraction.sorting import (CATEGORY_COLUMN, MAX_VALUE_COLUMN,
+                                        MEASURE_UNIT_COLUMN, MIN_VALUE_COLUMN,
+                                        NAME_COLUMN, REF_RANGE_COLUMN,
+                                        RESULT_COLUMN, IN_RANGE_COLUMN)
+from licenta.models import (Analysis, AnalysisCategory, AnalysisCategoryName,
+                            AnalysisPDF, AnalysisResult)
 
 logger = logging.getLogger(__name__)
 
+SUGGESTION_PROMPT = "Suggest a fix for the analysis `%s`. The result is `%s` and it should be between `%s` and `%s`. The measurement unit is `%s`. Please provide a suggestion in English about what the user should do."
+
 
 @shared_task
-def analyze_pdf(pdf_id: int, user_id: int):
+@transaction.atomic
+def analyze_pdf(analysis_pk):
+    analysis_pdf = AnalysisPDF.objects.get(pk=analysis_pk)
+    Analysis.objects.filter(source=analysis_pdf).delete()
+    analysis = Analysis.objects.create(source=analysis_pdf)
+    pdf = pymupdf.Document(stream=analysis_pdf.file.open("rb").read())
 
-    pdf = AnalizePDF.objects.get(id=pdf_id)
-    user = User.objects.get(id=user_id)
+    data = extract_data_from_pdf(analysis_pdf.provider, pdf)
 
-    analiza = Analize.objects.create(source=pdf, user=user)
+    categories_names = list(AnalysisCategoryName.objects.filter(
+        pk__in=data[CATEGORY_COLUMN].unique()
+    ).all())
 
-    results = createJSON(pdf.file.file)
+    results = []
+    for _, row in data.iterrows():
+        result = AnalysisResult(
+            category=next(
+                c_name.category for c_name in categories_names if c_name.pk == row[CATEGORY_COLUMN]
+            ),
+            name=row[NAME_COLUMN].strip(),
+            result=row[RESULT_COLUMN].strip(),
+            measurement_unit=row[MEASURE_UNIT_COLUMN].strip(),
+            refference_range=row[REF_RANGE_COLUMN].strip(),
+            range_min=row[MIN_VALUE_COLUMN] if not pd.isna(row[MIN_VALUE_COLUMN]) else None,
+            range_max=row[MAX_VALUE_COLUMN] if not pd.isna(row[MAX_VALUE_COLUMN]) else None,
+            in_range=row[IN_RANGE_COLUMN] if not pd.isna(row[IN_RANGE_COLUMN]) else None,
+            analysis=analysis,
+        )
+        results.append(result)
 
-    analiza.date = datetime.datetime.fromisoformat(results["date"])
-    analiza.save()
+    AnalysisResult.objects.bulk_create(results)
 
-    for result in results["results"]:
-        try:
-            r_min = float(result.get("range_min")) if result.get("range_min") else None
-        except ValueError:
-            r_min = None
-
-        try:
-            r_max = float(result.get("range_max")) if result.get("range_max") else None
-        except ValueError:
-            r_max = None
-
-        is_numeric = result.get("is_numeric") in ["true", "True", "1", True]
-        measurement_unit = result.get("measurement_unit", "")
-        name = result.get("name")
-
-        if is_numeric:
-            try:
-                r_result = float(result.get("result", 0))
-            except ValueError:
-                r_result = 0.0
-            r_expected = None
-        else:
-            r_expected = result.get("expected") in ["true", "True", "1", True]
-            r_result = float(result.get("result") in ["true", "True", "1", True])
-
-        try:
-            r = AnalizeRezultate.objects.create(
-                name=name,
-                is_numeric=is_numeric,
-                result=r_result,
-                range_min=r_min,
-                range_max=r_max,
-                expected=r_expected,
-                measurement_unit=measurement_unit,
-                analysis=analiza,
-            )
-
-            if r.is_numeric:
-                if (r.range_min and r.result < r.range_min) or (r.range_max and r.result > r.range_max):
-                    add_suggestion.delay(r.id, True)
-            else:
-                if r.result != r.expected:
-                    add_suggestion.delay(r.id, False)
-        except Exception as e:
-            print(e)
-
-SUGGESTION_PROMPT_NUMERIC = "Suggest a fix for the analysis `%s`. The result is `%s` and it should be between `%s` and `%s`. The measurement unit is `%s`. Please provide a suggestion in English about what the user should do."
-SUGGESTION_PROMPT_NON_NUMERIC = "Suggest a fix for the analysis `%s`. The result is `%s` and it should be `%s`. The measurement unit is `%s`. Please provide a suggestion in English about what the user should do."
 
 @shared_task
-def add_suggestion(result_id: int, numeric: bool):
-    result = AnalizeRezultate.objects.get(id=result_id)
-
-    prompt = SUGGESTION_PROMPT_NUMERIC if numeric else SUGGESTION_PROMPT_NON_NUMERIC
+@transaction.atomic
+def add_suggestion(result_pk: int):
+    result = AnalysisResult.objects.get(pk=result_pk)
 
     suggestion = settings.OPENAPI_CLIENT.chat.completions.create(
         model="gpt-4-turbo",
         messages=[
             {
                 "role": "system",
-                "content": prompt % (result.name, result.result, result.range_min, result.range_max, result.measurement_unit),
+                "content": SUGGESTION_PROMPT
+                % (
+                    result.name,
+                    result.result,
+                    result.range_min,
+                    result.range_max,
+                    result.measurement_unit,
+                ),
             },
         ],
     )
@@ -90,3 +80,35 @@ def add_suggestion(result_id: int, numeric: bool):
 
     result.suggestion = suggestion.choices[0].message.content
     result.save()
+
+
+@shared_task
+@transaction.atomic
+def update_all_analysis_categories():
+    AnalysisCategory.objects.all().delete()
+    response = requests.get(
+        "https://docs.google.com/spreadsheets/d/12rEWTwolEPUCIuWieY94XeK7vsOMZeia1KVkdWzBFwA/export?format=csv&gid=0"
+    )
+    assert response.status_code == 200, "Wrong status code"
+    categories_df = pd.read_csv(StringIO(response.text))
+
+    categories = {}
+    for row in categories_df.iloc:
+        synonims = list(filter(lambda x: not isinstance(x, float), row[1:]))
+        if len(synonims) == 0:
+            continue
+        base = synonims[0]
+        categories[base] = synonims
+
+    created_categories = AnalysisCategory.objects.bulk_create(
+        [AnalysisCategory(name=base) for base in categories.keys()]
+    )
+    analysis_names = []
+    for created_category, synonims in zip(created_categories, categories.values()):
+        analysis_names.extend(
+            [
+                AnalysisCategoryName(name=synonim, category=created_category)
+                for synonim in synonims
+            ]
+        )
+    AnalysisCategoryName.objects.bulk_create(analysis_names)

@@ -4,3 +4,4 @@ synevo
 **/__pycache__
 analize-pdfs
 db.sqlite3
+*.pyc

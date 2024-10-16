@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from licenta.models import User, RadiografiePDF, AnalizePDF, AnalizeRezultate, Analize
+from licenta.models import User, RadiographyPDF, AnalysisPDF, AnalysisResult, Analysis
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,19 +10,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ["is_staff"]
 
 
-class RadiografiePDFSerializer(serializers.HyperlinkedModelSerializer):
-    source = serializers.ChoiceField(choices=RadiografiePDF.SOURCES)
-
+class RadiographyPDFSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = RadiografiePDF
+        model = RadiographyPDF
         fields = ("id", "url", "file", "source", "user", "created")
 
 
-class AnalizePDFSerializer(serializers.HyperlinkedModelSerializer):
+class AnalysisPDFSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-        model = AnalizePDF
+        model = AnalysisPDF
         fields = ("url", "file", "source", "user", "created")
 
     def create(self, validated_data):
@@ -30,9 +28,9 @@ class AnalizePDFSerializer(serializers.HyperlinkedModelSerializer):
         return super().create(validated_data)
 
 
-class AnalizeRezultateSerializer(serializers.HyperlinkedModelSerializer):
+class AnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = AnalizeRezultate
+        model = AnalysisResult
         fields = (
             "url",
             "name",
@@ -48,9 +46,9 @@ class AnalizeRezultateSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class AnalizeSerializer(serializers.HyperlinkedModelSerializer):
-    results = AnalizeRezultateSerializer(read_only=True, many=True)
+class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
+    results = AnalysisResultsSerializer(read_only=True, many=True)
 
     class Meta:
-        model = Analize
+        model = Analysis
         fields = ("url", "user", "source", "created", "results")

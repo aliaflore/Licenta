@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "django_extensions",
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -113,7 +114,7 @@ CELERY_RESULT_BACKEND = "django-db"
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
-# CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_ALWAYS_EAGER = True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
@@ -136,3 +137,5 @@ OPENAPI_KEY = os.getenv("OPENAPI_KEY")
 OPENAPI_CLIENT = OpenAI(
     organization=OPENAPI_ORGANIZATION, project=OPENAPI_PROJECT, api_key=OPENAPI_KEY
 )
+
+TESSERACT_LANGUAGES = "eng+ron"

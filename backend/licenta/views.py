@@ -4,13 +4,13 @@ from rest_framework.decorators import action
 import itertools
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import User, AnalizePDF, Analize, RadiografiePDF, AnalizeRezultate
+from licenta.models import User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult
 from licenta.serializers import (
     UserSerializer,
-    AnalizePDFSerializer,
-    AnalizeSerializer,
-    RadiografiePDFSerializer,
-    AnalizeRezultateSerializer,
+    AnalysisPDFSerializer,
+    AnalysisSerializer,
+    RadiographyPDFSerializer,
+    AnalysisResultsSerializer,
 )
 from .tasks import *
 
@@ -34,8 +34,8 @@ class AnalizePDFViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = AnalizePDF.objects.all()
-    serializer_class = AnalizePDFSerializer
+    queryset = AnalysisPDF.objects.all()
+    serializer_class = AnalysisPDFSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -46,7 +46,6 @@ class AnalizePDFViewSet(
             data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -60,8 +59,8 @@ class RadiografiePDFViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = RadiografiePDF.objects.all()
-    serializer_class = RadiografiePDFSerializer
+    queryset = RadiographyPDF.objects.all()
+    serializer_class = RadiographyPDFSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -73,8 +72,8 @@ class AnalizeViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Analize.objects.all()
-    serializer_class = AnalizeSerializer
+    queryset = Analysis.objects.all()
+    serializer_class = AnalysisSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -86,8 +85,8 @@ class AnalizeRezultateViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = AnalizeRezultate.objects.all()
-    serializer_class = AnalizeRezultateSerializer
+    queryset = AnalysisResult.objects.all()
+    serializer_class = AnalysisResultsSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -100,7 +99,7 @@ class HistoryViewSet(viewsets.ViewSet):
             raise NotAuthenticated
 
         toate = (
-            AnalizeRezultate.objects.filter(analysis__user=self.request.user)
+            AnalysisResult.objects.filter(analysis__user=self.request.user)
             .select_related("analysis")
             .all()
         )

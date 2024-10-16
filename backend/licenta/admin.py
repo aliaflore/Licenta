@@ -1,30 +1,61 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from licenta.models import User, AnalizePDF, RadiografiePDF, Analize, AnalizeRezultate
+from django.template.defaultfilters import escape
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult
+
+
+class AnalysisProviderAdmin(admin.ModelAdmin):
+    pass
+
+
+class AnalysisCategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+class AnalysisCategoryNameAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category']
 
 
 class UserAdmin(BaseUserAdmin):
     pass
 
 
-class AnalizePDFAdmin(admin.ModelAdmin):
+class AnalysisPDFAdmin(admin.ModelAdmin):
     pass
 
 
-class RadiografiePdfAdmin(admin.ModelAdmin):
+class RadiographyPdfAdmin(admin.ModelAdmin):
     pass
 
 
-class AnalizeAdmin(admin.ModelAdmin):
-    pass
+class AnalysisResultInline(admin.TabularInline):
+    model = AnalysisResult
 
 
-class AnalizeRezultateAdmin(admin.ModelAdmin):
-    pass
+class AnalysisAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'source']
+    inlines = [AnalysisResultInline]
 
 
+class AnalysisResultAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'name', 'result', 'measurement_unit', 'refference_range', 'range_min', 'range_max', 'in_range', 'analysis_link']
+    readonly_fields = ['analysis_link']
+
+    def analysis_link(self, obj):
+        return mark_safe('<a href="%s">%s</a>' % (reverse("admin:licenta_analysis_change", args=(obj.analysis.pk,)) , escape(obj)))
+
+    analysis_link.allow_tags = True
+    analysis_link.short_description = "Analysis"
+
+
+
+admin.site.register(AnalysisProvider, AnalysisProviderAdmin)
+admin.site.register(AnalysisCategory, AnalysisCategoryAdmin)
+admin.site.register(AnalysisCategoryName, AnalysisCategoryNameAdmin)
 admin.site.register(User, UserAdmin)
-admin.site.register(AnalizePDF, AnalizePDFAdmin)
-admin.site.register(RadiografiePDF, RadiografiePdfAdmin)
-admin.site.register(Analize, AnalizeAdmin)
-admin.site.register(AnalizeRezultate, AnalizeRezultateAdmin)
+admin.site.register(AnalysisPDF, AnalysisPDFAdmin)
+admin.site.register(RadiographyPDF, RadiographyPdfAdmin)
+admin.site.register(Analysis, AnalysisAdmin)
+admin.site.register(AnalysisResult, AnalysisResultAdmin)
