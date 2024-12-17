@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+import functools
 
 
 class AnalysisProvider(models.Model):
@@ -16,6 +18,12 @@ class AnalysisProvider(models.Model):
     space_pixels = models.IntegerField()
     replace_results = models.JSONField(blank=True)
 
+    analysis_list = models.URLField(blank=True)
+    analysis_providedlang = models.TextField(choices=settings.LANGUAGES, default="en")
+    analysis_list_skip_first_row = models.BooleanField(default=False)
+    analysis_list_skip_first_table = models.BooleanField(default=False)
+    analysis_columns = models.JSONField(default=functools.partial(list, [0, 1, 2, 3]))
+
     def __str__(self):
         return self.name
 
@@ -30,7 +38,7 @@ class AnalysisCategory(models.Model):
 class AnalysisCategoryName(models.Model):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(
-        "AnalysisCategory", on_delete=models.CASCADE, related_name="names"
+        "AnalysisCategory", on_delete=models.CASCADE, related_name="related_names"
     )
 
     def __str__(self):
@@ -52,12 +60,20 @@ class AbstractPDF(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
 
+    taken_on = models.DateField(null=True)
+    doctor_notes = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
     class Meta:
         abstract = True
 
 
 class AnalysisPDF(AbstractPDF):
     file = models.FileField(upload_to="analize-pdfs/")
+
+    suggestion = models.TextField(blank=True)
 
     def __str__(self):
         return self.file.name
@@ -76,7 +92,12 @@ class Analysis(models.Model):
         on_delete=models.CASCADE,
     )
     created = models.DateTimeField(auto_now_add=True)
+
     notes = models.TextField(blank=True)
+    date = models.DateField(null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Analysis"
@@ -96,6 +117,28 @@ class AnalysisResult(models.Model):
     in_range = models.BooleanField(null=True)
     suggestion = models.TextField(blank=True)
 
+    doctor_note = models.TextField(blank=True)
+
     analysis = models.ForeignKey(
         Analysis, on_delete=models.CASCADE, related_name="results"
     )
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+
+class Translation(models.Model):
+    original_text = models.TextField(db_index=True)
+    translated_text = models.TextField()
+    source_language = models.TextField(choices=settings.LANGUAGES, default="en")
+    target_language = models.TextField(choices=settings.LANGUAGES, default="ro")
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+
+class ExtraAnalysisCategories(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name

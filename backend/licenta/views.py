@@ -1,11 +1,12 @@
-from django.shortcuts import render
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 import itertools
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult
+from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult
 from licenta.serializers import (
+    FullAnalysisCategorySerializer,
+    FullAnalysisProviderSerializer,
     UserSerializer,
     AnalysisPDFSerializer,
     AnalysisSerializer,
@@ -28,13 +29,13 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({"error": "not logged in"})
 
 
-class AnalizePDFViewSet(
+class AnalysisPDFViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = AnalysisPDF.objects.all()
+    queryset = AnalysisPDF.objects.select_related('analysis').all()
     serializer_class = AnalysisPDFSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -53,7 +54,7 @@ class AnalizePDFViewSet(
         )
 
 
-class RadiografiePDFViewSet(
+class RadiographyPDFViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
@@ -67,7 +68,7 @@ class RadiografiePDFViewSet(
         return super().get_queryset().filter(user=self.request.user)
 
 
-class AnalizeViewSet(
+class AnalysisViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
@@ -77,20 +78,30 @@ class AnalizeViewSet(
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        return super().get_queryset().filter(source__user=self.request.user)
 
 
-class AnalizeRezultateViewSet(
-    mixins.RetrieveModelMixin,
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet,
-):
+class AnalysisResultsViewSet(viewsets.ModelViewSet):
     queryset = AnalysisResult.objects.all()
     serializer_class = AnalysisResultsSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset().filter(analysis__user=self.request.user)
+        return super().get_queryset().filter(analysis__source__user=self.request.user)
+
+    @action(detail=True, methods=["post"])
+    def regenerate_suggestions(self, request):
+        if not self.request.user.is_authenticated:
+            raise NotAuthenticated
+        object = self.get_object()
+        add_suggestion.delay(object.pk)
+        return Response({"status": "The suggestion is being generated."})
+
+
+class AnalysisCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = AnalysisCategory.objects.prefetch_related("related_names").all()
+    serializer_class = FullAnalysisCategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class HistoryViewSet(viewsets.ViewSet):
@@ -99,8 +110,8 @@ class HistoryViewSet(viewsets.ViewSet):
             raise NotAuthenticated
 
         toate = (
-            AnalysisResult.objects.filter(analysis__user=self.request.user)
-            .select_related("analysis")
+            AnalysisResult.objects.filter(analysis__source__user=self.request.user)
+            .prefetch_related("analysis")
             .all()
         )
 
@@ -110,16 +121,20 @@ class HistoryViewSet(viewsets.ViewSet):
         results = []
 
         for key, group in an_iterator:
-            d = {"nume": str(key), "data": []}
+            d = {
+                "name": str(key), 
+                "category": next(group).category.name,
+                "data": []
+            }
             for analiza in group:
                 d["data"].append(
                     {
                         "date": analiza.analysis.date,
-                        "is_numeric": analiza.is_numeric,
+                        "in_range": analiza.in_range,
                         "result": analiza.result,
                         "range_min": analiza.range_min,
                         "range_max": analiza.range_max,
-                        "expected": analiza.expected,
+                        "refference_range": analiza.refference_range,
                         "measurement_unit": analiza.measurement_unit,
                         "suggestion": analiza.suggestion,
                     }
@@ -127,3 +142,9 @@ class HistoryViewSet(viewsets.ViewSet):
             results.append(d)
 
         return Response({"results": results})
+
+
+class AnalysisProviderViewSet(viewsets.ModelViewSet):
+    queryset = AnalysisProvider.objects.all()
+    serializer_class = FullAnalysisProviderSerializer
+    permission_classes = [permissions.IsAdminUser]

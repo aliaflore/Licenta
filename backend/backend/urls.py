@@ -3,20 +3,24 @@ from django.urls import include, path
 from rest_framework import routers
 
 from licenta.views import (
+    AnalysisCategoryViewSet,
+    AnalysisProviderViewSet,
     UserViewSet,
-    AnalizePDFViewSet,
-    RadiografiePDFViewSet,
-    AnalizeViewSet,
-    AnalizeRezultateViewSet,
+    AnalysisPDFViewSet,
+    RadiographyPDFViewSet,
+    AnalysisViewSet,
+    AnalysisResultsViewSet,
     HistoryViewSet,
 )
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet)
-router.register(r"analizePdf", AnalizePDFViewSet)
-router.register(r"radiografiePdf", RadiografiePDFViewSet)
-router.register(r"analize", AnalizeViewSet)
-router.register(r"analizeRezultate", AnalizeRezultateViewSet)
+router.register(r"analysis-pdf", AnalysisPDFViewSet)
+router.register(r"radiography-pdf", RadiographyPDFViewSet)
+router.register(r"analysis", AnalysisViewSet)
+router.register(r"analysis-providers", AnalysisProviderViewSet)
+router.register(r"analysis-results", AnalysisResultsViewSet)
+router.register(r"analysis-category", AnalysisCategoryViewSet)
 router.register(r"history", HistoryViewSet, basename="history")
 
 urlpatterns = [

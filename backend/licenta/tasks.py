@@ -7,13 +7,14 @@ import requests
 from celery import shared_task
 from django.conf import settings
 from django.db import transaction
+from licenta.category_import import CategoryImportMatcher, PDFCategoryImporter, TranslatedCategoryImport
 from licenta.extraction.all import extract_data_from_pdf
 from licenta.extraction.sorting import (CATEGORY_COLUMN, MAX_VALUE_COLUMN,
                                         MEASURE_UNIT_COLUMN, MIN_VALUE_COLUMN,
                                         NAME_COLUMN, REF_RANGE_COLUMN,
                                         RESULT_COLUMN, IN_RANGE_COLUMN)
 from licenta.models import (Analysis, AnalysisCategory, AnalysisCategoryName,
-                            AnalysisPDF, AnalysisResult)
+                            AnalysisPDF, AnalysisProvider, AnalysisResult)
 
 logger = logging.getLogger(__name__)
 
@@ -112,3 +113,21 @@ def update_all_analysis_categories():
             ]
         )
     AnalysisCategoryName.objects.bulk_create(analysis_names)
+
+
+@shared_task
+def import_all_analysis_categories():
+    provider_data = []
+    for provider in AnalysisProvider.objects.all():
+        importer = PDFCategoryImporter(provider)
+        importer.provide()
+        translated_importer = TranslatedCategoryImport(importer)
+        translated_importer.provide()
+        provider_data.append(translated_importer)
+    with transaction.atomic():
+        matcher = CategoryImportMatcher(provider_data)
+        groups = matcher.match()
+        for group in groups:
+            category, _  = AnalysisCategory.objects.get_or_create(name=group[0][1])
+            for name in group:
+                AnalysisCategoryName.objects.get_or_create(name=name[1], category=category)

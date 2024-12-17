@@ -139,3 +139,32 @@ OPENAPI_CLIENT = OpenAI(
 )
 
 TESSERACT_LANGUAGES = "eng+ron"
+
+ANALYSIS_TRANSLATE_LANGUAGES = ["en", "ro"]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": '[%(asctime)s] \033[93m%(levelname)s @ %(filename)s#%(lineno)d "%(message)s"\033[0m',
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+            "()": "backend.loggers.ExtraContextFormatter",
+        },
+        "simple": {"format": "%(levelname)s %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "root": {
+            "handlers": ["console"],
+            "propagate": True,
+            "level": "INFO",
+        }
+    },
+}

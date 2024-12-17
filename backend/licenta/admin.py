@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.template.defaultfilters import escape
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult
+from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, ExtraAnalysisCategories, Translation, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult
 
 
 class AnalysisProviderAdmin(admin.ModelAdmin):
@@ -50,6 +50,8 @@ class AnalysisResultAdmin(admin.ModelAdmin):
     analysis_link.short_description = "Analysis"
 
 
+class TranslationAdmin(admin.ModelAdmin):
+    list_display = ['original_text', 'translated_text', 'source_language', 'target_language']
 
 admin.site.register(AnalysisProvider, AnalysisProviderAdmin)
 admin.site.register(AnalysisCategory, AnalysisCategoryAdmin)
@@ -59,3 +61,5 @@ admin.site.register(AnalysisPDF, AnalysisPDFAdmin)
 admin.site.register(RadiographyPDF, RadiographyPdfAdmin)
 admin.site.register(Analysis, AnalysisAdmin)
 admin.site.register(AnalysisResult, AnalysisResultAdmin)
+admin.site.register(Translation, TranslationAdmin)
+admin.site.register(ExtraAnalysisCategories)
