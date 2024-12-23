@@ -26,7 +26,6 @@ export const load: LayoutServerLoad = async ({ parent, fetch }) => {
         },
     ));
     const result = (await response.json() || []) as HistoryData;
-    console.log(result);
     return {
         ...parentData,
         history: result.results

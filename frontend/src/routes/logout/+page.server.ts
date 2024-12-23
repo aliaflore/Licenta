@@ -3,8 +3,6 @@ import type { Actions } from './$types';
 
 export const actions = {
     default: async ({ request, fetch, url, cookies }) => {
-        console.log(cookies.get('csrftoken'));
-
         const data = await request.formData();
         const logout = data.get('logout')?.toString() || '';
 
@@ -18,9 +16,6 @@ export const actions = {
             }
         ));
 
-        console.log(await response.text());
-
-        console.log("Logged out");
         redirect(302, '/');
     },
 } satisfies Actions;

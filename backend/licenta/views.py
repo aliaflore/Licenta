@@ -148,3 +148,4 @@ class AnalysisProviderViewSet(viewsets.ModelViewSet):
     queryset = AnalysisProvider.objects.all()
     serializer_class = FullAnalysisProviderSerializer
     permission_classes = [permissions.IsAdminUser]
+    pagination_class = None

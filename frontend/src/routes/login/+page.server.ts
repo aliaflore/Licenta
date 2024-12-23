@@ -22,7 +22,6 @@ export const actions = {
         const result = await response.json() as any;
 
         if (result?.key) {
-            console.log("Logged in");
             redirect(302, '/');
         }
 

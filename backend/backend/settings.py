@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "django_celery_results",
     "dj_rest_auth",
+    "drf_spectacular",
 ]
 
 SITE_ID = 1
@@ -94,6 +95,15 @@ CELERY_BROKER_URL = os.environ.get(
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 30,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Licenta API',
+    'DESCRIPTION': 'Licenta',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    # OTHER SETTINGS
 }
 
 LANGUAGE_CODE = "en-us"

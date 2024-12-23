@@ -20,7 +20,27 @@ class AnalysisProviderSerializer(serializers.HyperlinkedModelSerializer):
 class FullAnalysisProviderSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AnalysisProvider
-        fields = "__all__"
+        fields = (
+            "pk",
+            "url",
+            "name",
+            "crops_words",
+            "crops_pixels",
+            "crop_similarity",
+            "line_height_tolerance",
+            "word_width_tolerance",
+            "line_continuation_difference_width",
+            "category_similarity",
+            "range_extraction_regex",
+            "ignored_words",
+            "space_pixels",
+            "replace_results",
+            "analysis_list",
+            "analysis_providedlang",
+            "analysis_list_skip_first_row",
+            "analysis_list_skip_first_table",
+            "analysis_columns",
+        )
 
 
 class RadiographyPDFSerializer(serializers.HyperlinkedModelSerializer):
