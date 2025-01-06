@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { AnalysisPDFResult, Error } from '$lib/types';
 
-type UResult = AnalysisPDFResult & Error;
+type result = AnalysisPDFResult & Error;
 
 const limit = 30;
 
@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ fetch, parent, url }) => {
             method: 'GET',
         }
     ));
-    const result = await response.json() as UResult;
+    const result = await response.json() as result;
     if (!result?.error) {
         return {
             ...parentData,

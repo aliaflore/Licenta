@@ -5,7 +5,11 @@
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
     ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale);
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
 
     const chartData = data.history.map(item => {
         const d = item.data.map((item) => {
@@ -86,9 +90,15 @@
                 <Accordion>
                     {#each item.suggestions as suggestion}
                         <AccordionItem>
-                            <svelte:fragment slot="lead">Suggestion from {suggestion.date}</svelte:fragment>
-                            <svelte:fragment slot="summary"><div></div></svelte:fragment>
-                            <svelte:fragment slot="content"><div class="whitespace-pre-line">{suggestion.suggestion}</div></svelte:fragment>
+                            {#snippet lead()}
+                                                        Suggestion from {suggestion.date}
+                                                    {/snippet}
+                            {#snippet summary()}
+                                                        <div></div>
+                                                    {/snippet}
+                            {#snippet content()}
+                                                        <div class="whitespace-pre-line">{suggestion.suggestion}</div>
+                                                    {/snippet}
                         </AccordionItem>
                     {/each}
                 </Accordion>

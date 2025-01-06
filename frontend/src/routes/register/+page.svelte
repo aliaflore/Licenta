@@ -2,7 +2,11 @@
 	import CheckBold from 'svelte-material-icons/CheckBold.svelte';
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 {#if data.loggedIn}

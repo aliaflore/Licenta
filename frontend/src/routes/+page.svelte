@@ -1,7 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <div class="container h-full mx-auto flex justify-center items-center">
@@ -9,7 +13,7 @@
 		<h2 class="h2">Welcome to Skeleton. {data.user?.username}</h2>
 		<!-- Animated Logo -->
 		<figure>
-			<section class="img-bg" />
+			<section class="img-bg"></section>
 			<svg
 				class="fill-token -scale-x-[100%]"
 				xmlns="http://www.w3.org/2000/svg"

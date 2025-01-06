@@ -2,10 +2,14 @@
 	import type { PageData, ActionData } from './$types';
 	import { FileDropzone } from '@skeletonlabs/skeleton';
     import FileUpload from 'svelte-material-icons/FileUpload.svelte';
-    export let data: PageData;
-    export let form: ActionData;
+    interface Props {
+        data: PageData;
+        form: ActionData;
+    }
 
-    let file: FileList;
+    let { data, form }: Props = $props();
+
+    let file: FileList = $state();
 </script>
 
 <div class="flex justify-center items-center min-h-full">
@@ -59,20 +63,26 @@
                 <p class="text-red-500 text-sm">{error}</p>
             {/each}
             <FileDropzone name="file" class="mb-4" bind:files={file} required accept="application/pdf">
-                <svelte:fragment slot="lead">
-                    <div class="flex justify-center align-center">
-                        <FileUpload size={80} />
-                    </div>
-                </svelte:fragment>
-                <svelte:fragment slot="message">
-                    <p class="text-center">Drop files here or click to upload</p>
-                    <p class="text-center text-secondary-100 text-sm">Accepts only PDF files</p>
-                </svelte:fragment>
-                <svelte:fragment slot="meta">
-                    {#if file?.length}
-                        <p class="text-center">{file[0].name}</p>
-                    {/if}
-                </svelte:fragment>
+                {#snippet lead()}
+                            
+                        <div class="flex justify-center align-center">
+                            <FileUpload size={80} />
+                        </div>
+                    
+                            {/snippet}
+                {#snippet message()}
+                            
+                        <p class="text-center">Drop files here or click to upload</p>
+                        <p class="text-center text-secondary-100 text-sm">Accepts only PDF files</p>
+                    
+                            {/snippet}
+                {#snippet meta()}
+                            
+                        {#if file?.length}
+                            <p class="text-center">{file[0].name}</p>
+                        {/if}
+                    
+                            {/snippet}
             </FileDropzone>
 
 			<button

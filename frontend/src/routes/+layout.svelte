@@ -13,51 +13,62 @@
     import { storePopup } from '@skeletonlabs/skeleton';
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+		children?: import('svelte').Snippet;
+	}
+
+	let { data, children }: Props = $props();
 </script>
 
 <!-- App Shell -->
 <AppShell>
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar>
-			<svelte:fragment slot="lead">
-                <a href="/">
-                    <strong class="text-xl uppercase">Licenta</strong>
-                </a>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				{#if data?.loggedIn}
-					<a href="/history" class="btn btn-sm variant-ghost-surface">
-						<span><History size={30} /></span>
-						<span>Istoricul datelor</span>
-					</a>
-					<!-- <a href="/logout" class="btn btn-sm variant-ghost-surface">
-						<span><AccountOff size={30} /></span>
-						<span>Iesire din cont</span>
-					</a>
-					<a href="/account-settings" class="btn btn-sm variant-ghost-surface">
-						<span><AccountWrench size={30} /></span>
-						<span>Setarile contului</span>
-					</a> -->
+	{#snippet header()}
+	
+			<!-- App Bar -->
+			<AppBar>
+				{#snippet lead()}
+					
+		                <a href="/">
+		                    <strong class="text-xl uppercase">Licenta</strong>
+		                </a>
+					
+					{/snippet}
+				{#snippet trail()}
+					
+						{#if data?.loggedIn}
+							<a href="/history" class="btn btn-sm variant-ghost-surface">
+								<span><History size={30} /></span>
+								<span>Istoricul datelor</span>
+							</a>
+							<!-- <a href="/logout" class="btn btn-sm variant-ghost-surface">
+								<span><AccountOff size={30} /></span>
+								<span>Iesire din cont</span>
+							</a>
+							<a href="/account-settings" class="btn btn-sm variant-ghost-surface">
+								<span><AccountWrench size={30} /></span>
+								<span>Setarile contului</span>
+							</a> -->
 
-					<a href="/" class="btn btn-sm variant-ghost-surface">
-						<span><AccountCircle size={30} /></span>
-						<span>Profilul meu</span>
-					</a>
-				{:else}
-					<a href="/register" class="btn btn-sm variant-ghost-surface">
-						<span><AccountQuestion size={30} /></span>
-						<span>Inregistrare</span>
-					</a>
-					<a href="/login" class="btn btn-sm variant-ghost-surface">
-						<span><AccountArrowDown size={30} /></span>
-						<span>Autentificare</span>
-					</a>
-				{/if}
-			</svelte:fragment>
-		</AppBar>
-	</svelte:fragment>
+							<a href="/" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Profilul meu</span>
+							</a>
+						{:else}
+							<a href="/register" class="btn btn-sm variant-ghost-surface">
+								<span><AccountQuestion size={30} /></span>
+								<span>Inregistrare</span>
+							</a>
+							<a href="/login" class="btn btn-sm variant-ghost-surface">
+								<span><AccountArrowDown size={30} /></span>
+								<span>Autentificare</span>
+							</a>
+						{/if}
+					
+					{/snippet}
+			</AppBar>
+		
+	{/snippet}
 	<!-- Page Route Content -->
-	<slot />
+	{@render children?.()}
 </AppShell>

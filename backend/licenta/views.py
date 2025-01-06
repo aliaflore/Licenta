@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 import itertools
+from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.exceptions import NotAuthenticated
 from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult
@@ -38,6 +39,8 @@ class AnalysisPDFViewSet(
     queryset = AnalysisPDF.objects.select_related('analysis').all()
     serializer_class = AnalysisPDFSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['pk', 'created', 'taken_on']
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
