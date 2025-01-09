@@ -8,6 +8,7 @@ from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, Radiog
 from licenta.serializers import (
     FullAnalysisCategorySerializer,
     FullAnalysisProviderSerializer,
+    ListAnalysisSerializer,
     UserSerializer,
     AnalysisPDFSerializer,
     AnalysisSerializer,
@@ -79,6 +80,11 @@ class AnalysisViewSet(
     queryset = Analysis.objects.all()
     serializer_class = AnalysisSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self): # type: ignore
+        if self.action == "list":
+            return ListAnalysisSerializer
+        return AnalysisSerializer
 
     def get_queryset(self):
         return super().get_queryset().filter(source__user=self.request.user)

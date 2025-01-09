@@ -1,9 +1,8 @@
-import cryptography.fernet
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 import functools
-from encrypted_model_fields.fields import EncryptedTextField, EncryptedDateField, EncryptedMixin, EncryptedBooleanField, decrypt_str
+from encrypted_model_fields.fields import EncryptedTextField, EncryptedDateField, EncryptedMixin, EncryptedBooleanField
 
 
 class EncryptedDecimalField(EncryptedMixin, models.DecimalField):

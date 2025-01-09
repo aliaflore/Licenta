@@ -11,6 +11,8 @@
 
     import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
     import { storePopup } from '@skeletonlabs/skeleton';
+	import { Breadcrumbs } from 'svelte-breadcrumbs';
+	import { page } from '$app/stores';
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	interface Props {
@@ -24,7 +26,6 @@
 <!-- App Shell -->
 <AppShell>
 	{#snippet header()}
-	
 			<!-- App Bar -->
 			<AppBar>
 				{#snippet lead()}
@@ -32,6 +33,22 @@
 		                <a href="/">
 		                    <strong class="text-xl uppercase">Licenta</strong>
 		                </a>
+
+                        <Breadcrumbs url={$page.url} routeId={$page.route.id} skipRoutesWithNoPage={false} pageData={$page.url}>
+                            {#snippet children({ crumbs })}
+                                <ol class="breadcrumb pl-10">
+                                    {#each crumbs as crumb, i}
+                                        <!-- If crumb index is less than the breadcrumb length minus 1 -->
+                                        {#if i < crumbs.length - 1}
+                                            <li class="crumb"><a class="anchor" href={crumb.url}>{crumb.title}</a></li>
+                                            <li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+                                        {:else}
+                                            <li class="crumb">{crumb.title}</li>
+                                        {/if}
+                                    {/each}
+                                </ol>
+                            {/snippet}
+                        </Breadcrumbs>
 					
 					{/snippet}
 				{#snippet trail()}

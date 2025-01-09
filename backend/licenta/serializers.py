@@ -168,3 +168,12 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         model = Analysis
         fields = ("url", "source", "created", "results", "notes")
         read_only_fields = ("results", "url", "source", "created")
+
+
+class ListAnalysisSerializer(serializers.HyperlinkedModelSerializer):
+    source = AnalysisPDFSerializer(read_only=True)
+
+    class Meta:
+        model = Analysis
+        fields = ("url", "source", "created", "notes")
+        read_only_fields = ( "url", "source", "created")
