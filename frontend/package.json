@@ -42,10 +42,9 @@
   "dependencies": {
     "@floating-ui/dom": "^1.6.12",
     "@sveltejs/vite-plugin-svelte-inspector": "^4.0.1",
-    "chart.js": "^4.4.7",
+    "apexcharts": "^4.3.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "moment": "^2.30.1",
-    "svelte-chartjs": "^3.1.5",
     "svelte-material-icons": "^3.0.5",
     "vite": "^6.0.5"
   },

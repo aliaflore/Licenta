@@ -75,17 +75,23 @@ class AnalysisPDFSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     analysis = serializers.HyperlinkedRelatedField(
-        queryset=Analysis.objects.all(),
         view_name="analysis-detail",
         required=False,
         allow_null=True,
+        read_only=True,
+    )
+
+    analysis_id = serializers.PrimaryKeyRelatedField(
+        required=False,
+        source="analysis",
+        read_only=True,
     )
 
     class Meta:
         model = AnalysisPDF
         fields = (
             "pk", "url", "file", "provider", "user", "created", "taken_on", "doctor_notes", "suggestion", "provider_id",
-            "analysis", "created", "modified")
+            "analysis", "analysis_id", "created", "modified")
         read_only_fields = ("created", "url")
         extra_kwargs = {
             'file': {'required': True},
@@ -156,6 +162,7 @@ class AnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
     results = AnalysisResultsSerializer(read_only=True, many=True)
+    source = AnalysisPDFSerializer(read_only=True)
 
     class Meta:
         model = Analysis

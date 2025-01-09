@@ -30,7 +30,7 @@
                 >
                     <option value="" disabled selected>Select a provider</option>
                     {#each data.analysisProviders || [] as provider}
-                        <option value={provider.name}>{provider.name}</option>
+                        <option value={provider.pk}>{provider.name}</option>
                     {/each}
                 </select>
             </div>

@@ -1,10 +1,9 @@
 <script lang="ts">
-    import type { PageData } from './$types';
     import FileDocument from 'svelte-material-icons/FileDocument.svelte';
     import Play from 'svelte-material-icons/Play.svelte';
     import moment from 'moment';
-    import { popup } from '@skeletonlabs/skeleton';
-    import type { PopupSettings } from '@skeletonlabs/skeleton';
+    import { ConicGradient, popup } from '@skeletonlabs/skeleton';
+    import type { ConicStop, PopupSettings } from '@skeletonlabs/skeleton';
 
     import { reload } from './load';
 
@@ -30,11 +29,15 @@
         target: 'popupInspect',
         placement: 'top',
     };
+    const conicStops: ConicStop[] = [
+        { color: 'transparent', start: 0, end: 25 },
+        { color: 'rgb(var(--color-surface-500))', start: 75, end: 100 }
+    ];
 </script>
 
 <div class="flex justify-center align-middle">
     <div class="table-container m-10 w-auto max-w-5xl">
-        <div class="table-container">
+        <div class="table-container !table-comfortable !table-hover">
             <Datatable {table}>
                 {#snippet header()}
                     <div></div>
@@ -54,7 +57,7 @@
                     </thead>
                     <tbody>
                         {#each table.rows as row}
-                            <tr class="hover:text-black">
+                            <tr>
                                 <td>{row.pk}</td>
                                 <td>
                                     <div class="flex flex-row">
@@ -87,19 +90,30 @@
                                         No notes
                                     {/if}
                                 </td>
-                                <td class="text-right">
-                                    <div class="card p-4 shadow-xl" data-popup="popupDocument">
-                                        <div><p>View Document</p></div>
+                                <td>
+                                    <div class="flex flex-row w-auto h-auto gap-1">
+                                        <div class="card p-4 shadow-xl" data-popup="popupDocument">
+                                            <div><p>View Document</p></div>
+                                        </div>
+                                        <a href={row.file} class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
+                                            <FileDocument size={24} />
+                                        </a>
+                                        {#if !!row.analysis_id}
+                                        <div class="card p-4 shadow-xl" data-popup="popupInspect">
+                                            <div><p>Inspect the Analyses</p></div>
+                                        </div>
+                                        <a href={`/analyses/${row.analysis_id}`} target="_blank" class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none" use:popup={popupInspect}>
+                                            <Play size={24} />
+                                        </a>
+                                        {:else}
+                                        <div class="card p-4 shadow-xl" data-popup="popupInspect">
+                                            <div><p>Not yet analyzed</p></div>
+                                        </div>
+                                        <btn disabled target="_blank" class="btn-icon btn-sm [&>*]:pointer-events-none" use:popup={popupInspect}>
+                                            <ConicGradient stops={conicStops} spin width="w-10" />
+                                        </btn>
+                                        {/if}
                                     </div>
-                                    <a href={row.file} class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
-                                        <FileDocument size={24} />
-                                    </a>
-                                    <div class="card p-4 shadow-xl" data-popup="popupInspect">
-                                        <div><p>Inspect the Analyses</p></div>
-                                    </div>
-                                    <a href={`/analysis/${row.pk}`} target="_blank" class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none" use:popup={popupInspect}>
-                                        <Play size={24} />
-                                    </a>
                                 </td>
                             </tr>
                         {/each}

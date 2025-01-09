@@ -833,6 +833,21 @@ celery = ">=5.2.7,<6.0"
 Django = ">=3.2.18"
 
 [[package]]
+name = "django-encrypted-model-fields"
+version = "0.6.5"
+description = "A set of fields that wrap standard Django fields with encryption provided by the python cryptography library."
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "django-encrypted-model-fields-0.6.5.tar.gz", hash = "sha256:8bd21c5565c0d64ec4dbd375ad34fea68b4da2db871dec3fa71fe7b5e4221c99"},
+    {file = "django_encrypted_model_fields-0.6.5-py3-none-any.whl", hash = "sha256:b21bbdd8ae2e1a0ea37a5049b3ba46e6e63bf287ad241219a058fac1070796cc"},
+]
+
+[package.dependencies]
+cryptography = ">=3.4"
+Django = ">=2.2"
+
+[[package]]
 name = "django-extensions"
 version = "3.2.3"
 description = "Extensions for Django"
@@ -3386,4 +3401,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "cbb49c1580a8e3e25106163a81c3b66882de41f5f73ced9210b316d622da83ea"
+content-hash = "2cf5a05c792f7b3c74bdc11749f625eb497fba583bc2e09623f01fd6042a9de9"

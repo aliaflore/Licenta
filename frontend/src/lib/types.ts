@@ -90,8 +90,40 @@ export interface AnalysisPDF {
     taken_on:     null;
     doctor_notes: string;
     suggestion:   string;
-    analysis:     string;
+    analysis?:     string;
+    analysis_id?:  number;
     modified:     Date;
+}
+
+export interface Analysis {
+    url:     string;
+    source:  AnalysisPDF;
+    created: Date;
+    results: AnalysisResult[];
+    notes:   string;
+}
+
+export interface AnalysisResult {
+    url:              string;
+    pk:               number;
+    name:             string;
+    category:         AnalysisCategory;
+    result:           string;
+    measurement_unit: string;
+    refference_range: string;
+    range_min:        null | string;
+    range_max:        null | string;
+    in_range:         boolean | null;
+    suggestion:       string;
+    doctor_note:      string;
+    created:          Date;
+    modified:         Date;
+}
+
+export interface AnalysisCategory {
+    pk:            number;
+    name:          string;
+    related_names: string[];
 }
 
 export type AnalysisPDFResult = PaginatedResult<AnalysisPDF>;

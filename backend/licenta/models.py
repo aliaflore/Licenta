@@ -1,7 +1,13 @@
+import cryptography.fernet
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 import functools
+from encrypted_model_fields.fields import EncryptedTextField, EncryptedDateField, EncryptedMixin, EncryptedBooleanField, decrypt_str
+
+
+class EncryptedDecimalField(EncryptedMixin, models.DecimalField):
+    pass
 
 
 class AnalysisProvider(models.Model):
@@ -60,8 +66,8 @@ class AbstractPDF(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
 
-    taken_on = models.DateField(null=True)
-    doctor_notes = models.TextField(blank=True)
+    taken_on = EncryptedDateField(null=True)
+    doctor_notes = EncryptedTextField(blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -73,7 +79,7 @@ class AbstractPDF(models.Model):
 class AnalysisPDF(AbstractPDF):
     file = models.FileField(upload_to="analize-pdfs/")
 
-    suggestion = models.TextField(blank=True)
+    suggestion = EncryptedTextField(blank=True)
 
     def __str__(self):
         return self.file.name
@@ -93,8 +99,8 @@ class Analysis(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
 
-    notes = models.TextField(blank=True)
-    date = models.DateField(null=True)
+    notes = EncryptedTextField(blank=True)
+    date = EncryptedDateField(null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -108,16 +114,16 @@ class AnalysisResult(models.Model):
     category = models.ForeignKey(
         "AnalysisCategory", on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=50)
-    result = models.CharField(max_length=30)
-    measurement_unit = models.CharField(max_length=10)
-    refference_range = models.CharField(max_length=255)
-    range_min = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    range_max = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    in_range = models.BooleanField(null=True)
-    suggestion = models.TextField(blank=True)
+    name = EncryptedTextField(max_length=50)
+    result = EncryptedTextField(max_length=30)
+    measurement_unit = EncryptedTextField(max_length=10)
+    refference_range = EncryptedTextField(max_length=255)
+    range_min = EncryptedDecimalField(max_digits=10, decimal_places=2, null=True)
+    range_max = EncryptedDecimalField(max_digits=10, decimal_places=2, null=True)
+    in_range = EncryptedBooleanField(null=True)
+    suggestion = EncryptedTextField(blank=True)
 
-    doctor_note = models.TextField(blank=True)
+    doctor_note = EncryptedTextField(blank=True)
 
     analysis = models.ForeignKey(
         Analysis, on_delete=models.CASCADE, related_name="results"

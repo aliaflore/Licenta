@@ -1,3 +1,4 @@
+import decimal
 import logging
 from io import StringIO
 
@@ -43,11 +44,11 @@ def analyze_pdf(analysis_pk):
             ),
             name=row[NAME_COLUMN].strip(),
             result=row[RESULT_COLUMN].strip(),
-            measurement_unit=row[MEASURE_UNIT_COLUMN].strip(),
-            refference_range=row[REF_RANGE_COLUMN].strip(),
-            range_min=row[MIN_VALUE_COLUMN] if not pd.isna(row[MIN_VALUE_COLUMN]) else None,
-            range_max=row[MAX_VALUE_COLUMN] if not pd.isna(row[MAX_VALUE_COLUMN]) else None,
-            in_range=row[IN_RANGE_COLUMN] if not pd.isna(row[IN_RANGE_COLUMN]) else None,
+            measurement_unit=str(row[MEASURE_UNIT_COLUMN]).strip(),
+            refference_range=str(row[REF_RANGE_COLUMN]).strip(),
+            range_min=decimal.Decimal(row[MIN_VALUE_COLUMN]) if not pd.isna(row[MIN_VALUE_COLUMN]) else None,
+            range_max=decimal.Decimal(row[MAX_VALUE_COLUMN]) if not pd.isna(row[MAX_VALUE_COLUMN]) else None,
+            in_range=bool(row[IN_RANGE_COLUMN]) if not pd.isna(row[IN_RANGE_COLUMN]) else None,
             analysis=analysis,
         )
         results.append(result)

@@ -1,9 +1,6 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
-    import { Line } from 'svelte-chartjs';
-    import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale } from 'chart.js';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-    ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, PointElement, CategoryScale);
 
     interface Props {
         data: PageData;
@@ -84,7 +81,7 @@
 <div class="flex items-center w-full flex-col">
     {#each chartData as item}
         <div class="bg-gray-200 max-w-xl w-full text-black text-sm">
-            <Line {...item} />
+            <!-- <Line {...item} /> -->
 
             {#if item.suggestions.length > 0}
                 <Accordion>
