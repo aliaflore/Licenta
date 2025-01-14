@@ -26,7 +26,7 @@ export const actions = {
 
         if(response.ok) {
             const result = await response.json() as AnalysisPDF;
-            redirect(302, `/pdf/${result.pk}`);
+            redirect(302, `/analyses`);
         }
 
         const result = await response.json() as uploadErrors;

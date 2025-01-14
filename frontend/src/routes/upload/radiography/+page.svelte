@@ -20,6 +20,22 @@
 		</h1>
 
 		<form method="post" enctype="multipart/form-data" class="flex flex-col gap-4">
+            <div class="mb-4">
+                <label class="block mb-2 font-medium">Provider</label>
+                {#each form?.errors?.provider_id || [] as error}
+                    <p class="text-red-500 text-sm">{error}</p>
+                {/each}
+                <select
+                    class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-surface-600"
+                    name="provider_id"
+                >
+                    <option value="" disabled selected>Select a provider</option>
+                    {#each data.analysisProviders || [] as provider}
+                        <option value={provider.pk}>{provider.name}</option>
+                    {/each}
+                </select>
+            </div>
+
 			<div class="mb-4">
 				<label class="block mb-2 font-medium">Taken on</label>
                 {#each form?.errors?.taken_on || [] as error}

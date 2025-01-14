@@ -14,7 +14,7 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/analysis-pdf/',
+            url.origin + '/api/radiography-pdf/',
             {
                 method: 'POST',
                 body: data,
@@ -26,10 +26,11 @@ export const actions = {
 
         if(response.ok) {
             const result = await response.json() as AnalysisPDF;
-            redirect(302, `/pdf/${result.pk}`);
+            redirect(302, `/radiographies`);
         }
 
         const result = await response.json() as uploadErrors;
+        console.log(result);
         return {
             status: response.status,
             errors: result

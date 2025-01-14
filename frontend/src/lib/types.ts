@@ -128,3 +128,16 @@ export interface AnalysisCategory {
 
 export type AnalysisPDFResult = PaginatedResult<AnalysisPDF>;
 
+export interface RadiographyPDF {
+    pk:           number;
+    url:          string;
+    file:         string;
+    provider:     SimpleAnalysisProvider;
+    user:         User;
+    created:      Date;
+    taken_on:     Date;
+    doctor_notes: string;
+    modified:     Date;
+}
+
+export type RadiographyPDFResult = PaginatedResult<RadiographyPDF>;

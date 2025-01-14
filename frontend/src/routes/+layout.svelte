@@ -66,7 +66,18 @@
 								<span><AccountWrench size={30} /></span>
 								<span>Setarile contului</span>
 							</a> -->
-
+                            <a href="/analyses" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Analyses</span>
+							</a>
+                            <a href="/radiographies" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Radiographies</span>
+							</a>
+                            <a href="/upload" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Upload</span>
+							</a>
 							<a href="/" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Profilul meu</span>
