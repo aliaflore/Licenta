@@ -1,20 +1,5 @@
+import type { HistoryData } from '$lib/types';
 import type { LayoutServerLoad } from './$types';
-
-type HistoryData = {
-    results: {
-        nume: string,
-        data: {
-            date: string,
-            is_numeric: boolean,
-            result: number,
-            range_min: number,
-            range_max: number,
-            expected: boolean,
-            measurement_unit: string
-            suggestion?: string
-        }[]
-    }[]
-}
 
 export const load: LayoutServerLoad = async ({ parent, fetch }) => {
     const parentData = await parent();

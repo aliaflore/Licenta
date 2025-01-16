@@ -119,7 +119,7 @@ class HistoryViewSet(viewsets.ViewSet):
             raise NotAuthenticated
 
         toate = (
-            AnalysisResult.objects.filter(analysis__source__user=self.request.user)
+            AnalysisResult.objects.filter(analysis__source__user=self.request.user, range_min__isnull=False, range_max__isnull=False)
             .prefetch_related("analysis")
             .all()
         )
@@ -136,18 +136,21 @@ class HistoryViewSet(viewsets.ViewSet):
                 "data": []
             }
             for analiza in group:
-                d["data"].append(
-                    {
-                        "date": analiza.analysis.date,
-                        "in_range": analiza.in_range,
-                        "result": analiza.result,
-                        "range_min": analiza.range_min,
-                        "range_max": analiza.range_max,
-                        "refference_range": analiza.refference_range,
-                        "measurement_unit": analiza.measurement_unit,
-                        "suggestion": analiza.suggestion,
-                    }
-                )
+                try:
+                    d["data"].append(
+                        {
+                            "date": analiza.analysis.source.taken_on,
+                            "in_range": analiza.in_range,
+                            "result": float(analiza.result),
+                            "range_min": analiza.range_min,
+                            "range_max": analiza.range_max,
+                            "refference_range": analiza.refference_range,
+                            "measurement_unit": analiza.measurement_unit,
+                            "suggestion": analiza.suggestion,
+                        }
+                    )
+                except ValueError:
+                    pass
             results.append(d)
 
         return Response({"results": results})
