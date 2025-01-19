@@ -239,6 +239,14 @@ class PatientInvitesViewSet(viewsets.ModelViewSet):
             return super().get_queryset()
         return super().get_queryset().filter(doctor=request.user)
 
+    @action(detail=True, methods=["post"])
+    def resend(self, request, pk=None):
+        invite = self.get_object()
+        if invite.accepted:
+            return Response({"error": "The invite has already been accepted."}, status=status.HTTP_400_BAD_REQUEST)
+        notify_patient_about_invite.delay(invite.pk)
+        return Response({"status": "The invite has been resent."})
+
 
 class DoctorInvitesViewSet(
     mixins.RetrieveModelMixin,

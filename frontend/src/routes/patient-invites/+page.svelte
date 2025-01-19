@@ -1,4 +1,6 @@
 <script lang="ts">
+    import EmailSync from 'svelte-material-icons/EmailSync.svelte';
+    import TrashCan from 'svelte-material-icons/TrashCan.svelte';
     import moment from 'moment';
 
     import { reload } from './load';
@@ -72,7 +74,20 @@
                                     {/if}
                                 </td>
                                 <td>
-                                    assad
+                                    <div class="flex flex-row w-auto h-auto gap-1">
+                                        <form method="POST" action="?/resend">
+                                            <input type="hidden" name="pk" value={row.pk} />
+                                            <button type="submit" class="btn-icon btn-sm bg-yellow-500 [&>*]:pointer-events-none">
+                                                <EmailSync size={24} />
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="?/delete">
+                                            <input type="hidden" name="pk" value={row.pk} />
+                                            <button class="btn-icon btn-sm bg-red-500 [&>*]:pointer-events-none">
+                                                <TrashCan size={24} />
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         {/each}

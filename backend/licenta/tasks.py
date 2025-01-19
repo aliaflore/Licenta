@@ -139,14 +139,12 @@ def import_all_analysis_categories():
 def notify_patient_about_invite(invite_pk: int):
     invite = PatientInvite.objects.get(pk=invite_pk)
     send_templated_mail(
-        template_name='welcome',
-        from_email='from@example.com',
-        recipient_list=['to@example.com'],
+        template_name='invite',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[invite.patient.email],
         context={
             'username':invite.patient.username,
-            'full_name':invite.patient.get_full_name(),
-            'signup_date':invite.patient.date_joined,
-            'doctor_fullname': invite.doctor.get_full_name(),
+            'doctor_username': invite.doctor.username,
             'invite_url': f"{settings.FRONTEND_URL}/patient-invites",
         },
     )
