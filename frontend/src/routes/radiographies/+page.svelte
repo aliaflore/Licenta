@@ -1,8 +1,7 @@
 <script lang="ts">
     import FileDocument from 'svelte-material-icons/FileDocument.svelte';
-    import Play from 'svelte-material-icons/Play.svelte';
     import moment from 'moment';
-    import { ConicGradient, popup } from '@skeletonlabs/skeleton';
+    import { popup } from '@skeletonlabs/skeleton';
     import type { ConicStop, PopupSettings } from '@skeletonlabs/skeleton';
 
     import { reload } from './load';
@@ -10,10 +9,11 @@
     import { Datatable, Pagination, RowCount, RowsPerPage, type State, TableHandler, ThSort } from '@vincjo/datatables/server'
 	import type { RadiographyPDF } from '$lib/types';
 	import { onMount } from 'svelte';
+	import { viewAsUser } from '$lib';
 
     const table = new TableHandler<RadiographyPDF>([], { rowsPerPage: 10 })
 
-    table.load((state: State) => reload(state));
+    table.load((state: State) => reload(state, $viewAsUser));
 
     onMount(() => {
         table.invalidate();
@@ -87,7 +87,7 @@
                                         <div class="card p-4 shadow-xl" data-popup="popupDocument">
                                             <div><p>View Document</p></div>
                                         </div>
-                                        <a href={row.file} class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
+                                        <a href={row.file} target="_blank" class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
                                             <FileDocument size={24} />
                                         </a>
                                     </div>

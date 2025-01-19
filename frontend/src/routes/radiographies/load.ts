@@ -1,11 +1,11 @@
-import type { Error, RadiographyPDFResult } from '$lib/types';
+import type { Error, RadiographyPDFResult, User } from '$lib/types';
 import type { State } from '@vincjo/datatables/server';
 
 type result = RadiographyPDFResult & Error;
 
-export const reload = async (state: State) => {
+export const reload = async (state: State, viewAsUserState: User | null) => {
 	const response = await fetch(
-        `/api/radiography-pdf/?${getParams(state)}`, 
+        `/api/radiography-pdf/?${getParams(state, viewAsUserState)}`, 
         {
             method: 'GET',
         }
@@ -19,7 +19,7 @@ export const reload = async (state: State) => {
     return json.results;
 };
 
-const getParams = (state: State) => {
+const getParams = (state: State, viewAsUserState: User | null) => {
 	const { rowsPerPage, sort, offset } = state;
 
 	let params = `offset=${offset}`;
@@ -30,6 +30,10 @@ const getParams = (state: State) => {
 
     if(sort) {
         params += `&ordering=${sort.direction === 'asc' ? '-' : ''}${sort.field?.toString()}`;
+    }
+
+    if(viewAsUserState) {
+        params += `&user=${viewAsUserState.pk}`;
     }
 
 	return params;
