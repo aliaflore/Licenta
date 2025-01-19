@@ -17,6 +17,8 @@ from licenta.views import (
     AnalysisViewSet,
     AnalysisResultsViewSet,
     HistoryViewSet,
+    DoctorInvitesViewSet,
+    PatientInvitesViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -28,6 +30,8 @@ router.register(r"analysis-providers", AnalysisProviderViewSet)
 router.register(r"analysis-results", AnalysisResultsViewSet)
 router.register(r"analysis-category", AnalysisCategoryViewSet)
 router.register(r"history", HistoryViewSet, basename="history")
+router.register(r"patient-invites", PatientInvitesViewSet, basename="patient-invites")
+router.register(r"doctor-invites", DoctorInvitesViewSet, basename="doctor-invites")
 
 urlpatterns = [
     path("admin/", admin.site.urls),

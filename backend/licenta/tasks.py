@@ -15,7 +15,8 @@ from licenta.extraction.sorting import (CATEGORY_COLUMN, MAX_VALUE_COLUMN,
                                         NAME_COLUMN, REF_RANGE_COLUMN,
                                         RESULT_COLUMN, IN_RANGE_COLUMN)
 from licenta.models import (Analysis, AnalysisCategory, AnalysisCategoryName,
-                            AnalysisPDF, AnalysisProvider, AnalysisResult)
+                            AnalysisPDF, AnalysisProvider, AnalysisResult, PatientInvite)
+from templated_email import send_templated_mail
 
 logger = logging.getLogger(__name__)
 
@@ -132,3 +133,22 @@ def import_all_analysis_categories():
             category, _  = AnalysisCategory.objects.get_or_create(name=group[0][1])
             for name in group:
                 AnalysisCategoryName.objects.get_or_create(name=name[1], category=category)
+
+
+@shared_task
+def notify_patient_about_invite(invite_pk: int):
+    invite = PatientInvite.objects.get(pk=invite_pk)
+    send_templated_mail(
+        template_name='welcome',
+        from_email='from@example.com',
+        recipient_list=['to@example.com'],
+        context={
+            'username':invite.patient.username,
+            'full_name':invite.patient.get_full_name(),
+            'signup_date':invite.patient.date_joined,
+            'doctor_fullname': invite.doctor.get_full_name(),
+            'invite_url': f"{settings.FRONTEND_URL}/patient-invites",
+        },
+    )
+
+    logger.info("Invite sent to %s", invite.patient.email)

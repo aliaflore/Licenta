@@ -3,12 +3,16 @@ from rest_framework.decorators import action
 import itertools
 from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult
+from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite
 from licenta.serializers import (
+    DoctorInviteSerializer,
     FullAnalysisCategorySerializer,
     FullAnalysisProviderSerializer,
+    HistorySerializer,
     ListAnalysisSerializer,
+    PatientInviteSerializer,
     UserSerializer,
     AnalysisPDFSerializer,
     AnalysisSerializer,
@@ -18,9 +22,19 @@ from licenta.serializers import (
 from .tasks import *
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class PermissionIsDoctor(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_doctor or request.user.is_superuser
+
+
+class UserViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated, PermissionIsDoctor]
 
     @action(detail=False)
     def me(self, request):
@@ -29,6 +43,12 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer = UserSerializer(user, context={"request": request})
             return Response(data={"user": serializer.data})
         return Response({"error": "not logged in"})
+
+
+class DoctorsViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.filter(is_doctor=True)
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class AnalysisPDFViewSet(
@@ -44,7 +64,20 @@ class AnalysisPDFViewSet(
     ordering_fields = ['pk', 'created', 'taken_on']
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        request: Request = self.request # type: ignore
+        queryset = super().get_queryset().filter(user=self.request.user)
+        if request.query_params.get("user"):
+            if (
+                request.user.is_superuser or (
+                    request.user.is_doctor and PatientInvite.objects.filter(
+                        accepted=True,
+                        doctor=request.user,
+                        patient_id=request.query_params["user"]
+                    ).exists()
+                )
+            ):
+                queryset= super().get_queryset().filter(user_id=request.query_params["user"])
+        return queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(
@@ -69,7 +102,20 @@ class RadiographyPDFViewSet(
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        request: Request = self.request # type: ignore
+        queryset = super().get_queryset().filter(user=self.request.user)
+        if request.query_params.get("user"):
+            if (
+                request.user.is_superuser or (
+                    request.user.is_doctor and PatientInvite.objects.filter(
+                        accepted=True,
+                        doctor=request.user,
+                        patient_id=request.query_params["user"]
+                    ).exists()
+                )
+            ):
+                queryset= super().get_queryset().filter(user_id=request.query_params["user"])
+        return queryset
 
 
 class AnalysisViewSet(
@@ -87,7 +133,20 @@ class AnalysisViewSet(
         return AnalysisSerializer
 
     def get_queryset(self):
-        return super().get_queryset().filter(source__user=self.request.user)
+        request: Request = self.request # type: ignore
+        queryset = super().get_queryset().filter(source__user=self.request.user)
+        if request.query_params.get("user"):
+            if (
+                request.user.is_superuser or (
+                    request.user.is_doctor and PatientInvite.objects.filter(
+                        accepted=True,
+                        doctor=request.user,
+                        patient_id=request.query_params["user"]
+                    ).exists()
+                )
+            ):
+                queryset= super().get_queryset().filter(source__user_id=request.query_params["user"])
+        return queryset
 
 
 class AnalysisResultsViewSet(viewsets.ModelViewSet):
@@ -96,7 +155,25 @@ class AnalysisResultsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset().filter(analysis__source__user=self.request.user)
+        request: Request = self.request # type: ignore
+        queryset = super().get_queryset().filter(analysis__source__user=self.request.user)
+        if request.query_params.get("user"):
+            if (
+                request.user.is_superuser or (
+                    request.user.is_doctor and PatientInvite.objects.filter(
+                        accepted=True,
+                        doctor=request.user,
+                        patient_id=request.query_params["user"]
+                    ).exists()
+                )
+            ):
+                queryset= super().get_queryset().filter(analysis__source__user_id=request.query_params["user"])
+        if request.query_params.get("category"):
+            queryset = queryset.filter(category_id=request.query_params["category"])
+        if request.query_params.get("name"):
+            data = queryset.all()
+            return filter(lambda x: x.name == request.query_params["name"], data)
+        return queryset
 
     @action(detail=True, methods=["post"])
     def regenerate_suggestions(self, request):
@@ -113,47 +190,33 @@ class AnalysisCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class HistoryViewSet(viewsets.ViewSet):
-    def list(self, request):
-        if not self.request.user.is_authenticated:
-            raise NotAuthenticated
+class HistoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    queryset = AnalysisResult.objects.order_by("category", "name", "analysis__date")\
+        .select_related("category", "analysis").all()
+    serializer_class = HistorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
 
-        toate = (
-            AnalysisResult.objects.filter(analysis__source__user=self.request.user, range_min__isnull=False, range_max__isnull=False)
-            .prefetch_related("analysis")
-            .all()
-        )
-
-        an_iterator = itertools.groupby(
-            sorted(list(toate), key=lambda x: x.name), lambda x: x.name
-        )
-        results = []
-
-        for key, group in an_iterator:
-            d = {
-                "name": str(key), 
-                "category": next(group).category.name,
-                "data": []
-            }
-            for analiza in group:
-                try:
-                    d["data"].append(
-                        {
-                            "date": analiza.analysis.source.taken_on,
-                            "in_range": analiza.in_range,
-                            "result": float(analiza.result),
-                            "range_min": analiza.range_min,
-                            "range_max": analiza.range_max,
-                            "refference_range": analiza.refference_range,
-                            "measurement_unit": analiza.measurement_unit,
-                            "suggestion": analiza.suggestion,
-                        }
-                    )
-                except ValueError:
-                    pass
-            results.append(d)
-
-        return Response({"results": results})
+    def get_queryset(self):
+        request: Request = self.request # type: ignore
+        queryset = super().get_queryset().filter(analysis__source__user=self.request.user)
+        if request.query_params.get("user"):
+            if (
+                request.user.is_superuser or (
+                    request.user.is_doctor and PatientInvite.objects.filter(
+                        accepted=True,
+                        doctor=request.user,
+                        patient_id=request.query_params["user"]
+                    ).exists()
+                )
+            ):
+                queryset= super().get_queryset().filter(analysis__source__user_id=request.query_params["user"])
+        if request.query_params.get("category"):
+            queryset = queryset.filter(category_id=request.query_params["category"])
+        if request.query_params.get("name"):
+            data = queryset.all()
+            return filter(lambda x: x.name == request.query_params["name"], data)
+        return queryset
 
 
 class AnalysisProviderViewSet(viewsets.ModelViewSet):
@@ -161,3 +224,33 @@ class AnalysisProviderViewSet(viewsets.ModelViewSet):
     serializer_class = FullAnalysisProviderSerializer
     permission_classes = [permissions.IsAdminUser]
     pagination_class = None
+
+
+class PatientInvitesViewSet(viewsets.ModelViewSet):
+    queryset = PatientInvite.objects.all()
+    serializer_class = PatientInviteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        request: Request = self.request # type: ignore
+        if request.user.is_superuser:
+            return super().get_queryset()
+        return super().get_queryset().filter(doctor=request.user)
+
+
+class DoctorInvitesViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = PatientInvite.objects.all()
+    serializer_class = DoctorInviteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        request: Request = self.request # type: ignore
+        if request.user.is_superuser:
+            return super().get_queryset()
+        return super().get_queryset().filter(patient=request.user)

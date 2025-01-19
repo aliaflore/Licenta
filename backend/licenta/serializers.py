@@ -1,13 +1,40 @@
+import itertools
 from rest_framework import serializers
 
-from licenta.models import AnalysisCategory, AnalysisProvider, User, RadiographyPDF, AnalysisPDF, AnalysisResult, Analysis
+from licenta.models import (
+    AnalysisCategory,
+    AnalysisProvider,
+    User,
+    RadiographyPDF,
+    AnalysisPDF,
+    AnalysisResult,
+    Analysis,
+    PatientInvite,
+)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ("pk", "url", "username", "email", "is_staff")
-        read_only_fields = ("is_staff",)
+        fields = (
+            "pk",
+            "url",
+            "email",
+            "username",
+            "first_name",
+            "last_name",
+            "is_staff",
+            "is_doctor",
+            "is_superuser",
+            "full_name",
+            "date_joined",
+        )
+        read_only_fields = fields
+
+    def get_full_name(self, obj):
+        return obj.get_full_name() or obj.username
 
 
 class AnalysisProviderSerializer(serializers.HyperlinkedModelSerializer):
@@ -55,7 +82,19 @@ class RadiographyPDFSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = RadiographyPDF
-        fields = ("pk", "url", "file", "provider", "user", "created", "taken_on", "doctor_notes", "provider_id", "created", "modified")
+        fields = (
+            "pk",
+            "url",
+            "file",
+            "provider",
+            "user",
+            "created",
+            "taken_on",
+            "doctor_notes",
+            "provider_id",
+            "created",
+            "modified",
+        )
         read_only_fields = ("created", "url")
         required_fields = ("file", "provider_id")
 
@@ -90,11 +129,24 @@ class AnalysisPDFSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AnalysisPDF
         fields = (
-            "pk", "url", "file", "provider", "user", "created", "taken_on", "doctor_notes", "suggestion", "provider_id",
-            "analysis", "analysis_id", "created", "modified")
+            "pk",
+            "url",
+            "file",
+            "provider",
+            "user",
+            "created",
+            "taken_on",
+            "doctor_notes",
+            "suggestion",
+            "provider_id",
+            "analysis",
+            "analysis_id",
+            "created",
+            "modified",
+        )
         read_only_fields = ("created", "url")
         extra_kwargs = {
-            'file': {'required': True},
+            "file": {"required": True},
         }
 
     def create(self, validated_data):
@@ -155,9 +207,76 @@ class AnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
             "category_id",
             "analysis_id",
             "created",
-            "modified"
+            "modified",
         )
         read_only_fields = ("created", "modified", "url", "pk")
+
+
+class SimpleAnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
+    date = serializers.DateField(source="analysis.date", read_only=True)
+    analysis_id = serializers.PrimaryKeyRelatedField(
+        required=False,
+        source="analysis",
+        read_only=True,
+    )
+
+    class Meta:
+        model = AnalysisResult
+        fields = (
+            "url",
+            "pk",
+            "date",
+            "analysis_id",
+            "result",
+            "measurement_unit",
+            "refference_range",
+            "range_min",
+            "range_max",
+            "in_range",
+            "suggestion",
+            "doctor_note",
+            "created",
+            "modified",
+        )
+        read_only_fields = ("created", "modified", "url", "pk")
+
+
+class HistoryListSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        data = sorted(data, key=lambda x: (x.category.id, x.name, x.analysis.date))
+        an_iterator = itertools.groupby(data, lambda x: (x.category, x.name))
+        results = []
+
+        for key, group in an_iterator:
+            group = list(group)
+            d = {
+                "name": group[0].name,
+                "category": AnalysisCategorySerializer(
+                    group[0].category, context=self.context
+                ).data,
+                "data": [],
+            }
+            for analiza in group:
+                try:
+                    d["data"].append(
+                        SimpleAnalysisResultsSerializer(
+                            analiza, context=self.context
+                        ).data
+                    )
+                except AttributeError:
+                    pass
+            results.append(d)
+        return results
+
+
+class HistorySerializer(serializers.HyperlinkedModelSerializer):
+    results = SimpleAnalysisResultsSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Analysis
+        fields = ("url", "created", "results", "notes")
+        read_only_fields = ("results", "url", "created")
+        list_serializer_class = HistoryListSerializer
 
 
 class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
@@ -176,4 +295,83 @@ class ListAnalysisSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Analysis
         fields = ("url", "source", "created", "notes")
-        read_only_fields = ( "url", "source", "created")
+        read_only_fields = ("url", "source", "created")
+
+
+class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
+    doctor = UserSerializer(read_only=True)
+    patient = UserSerializer(read_only=True)
+    patient_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        required=True,
+        write_only=True,
+        source="patient",
+    )
+    url = serializers.HyperlinkedIdentityField(
+        view_name="patient-invites-detail", lookup_field="pk"
+    )
+
+    class Meta:
+        model = PatientInvite
+        fields = (
+            "url",
+            "pk",
+            "patient",
+            "patient_id",
+            "doctor",
+            "expires",
+            "accepted",
+            "accepted_on",
+            "created",
+            "modified",
+        )
+        read_only_fields = tuple(filter(lambda x: x != "expires", fields))
+
+    def validate(self, attrs):
+        if self.context["request"].user == attrs["patient"]:
+            raise serializers.ValidationError(
+                {"patient_id": "You can't invite yourself to be your patient"}
+            )
+        if PatientInvite.objects.filter(
+            patient=attrs["patient"],
+            doctor=self.context["request"].user,
+            accepted=False,
+        ).exists():
+            raise serializers.ValidationError(
+                {"patient_id": "You already invited this user to be your patient"}
+            )
+        if PatientInvite.objects.filter(
+            patient=attrs["patient"], doctor=self.context["request"].user, accepted=True
+        ).exists():
+            raise serializers.ValidationError(
+                {"patient_id": "This user is already your patient"}
+            )
+        return super().validate(attrs)
+
+    def create(self, validated_data):
+        validated_data["doctor"] = self.context["request"].user
+        return super().create(validated_data)
+
+
+class DoctorInviteSerializer(serializers.HyperlinkedModelSerializer):
+    doctor = UserSerializer(read_only=True)
+    patient = UserSerializer(read_only=True)
+    url = serializers.HyperlinkedIdentityField(
+        view_name="doctor-invites-detail", lookup_field="pk"
+    )
+
+    class Meta:
+        model = PatientInvite
+        fields = (
+            "url",
+            "pk",
+            "patient",
+            "patient_id",
+            "doctor",
+            "expires",
+            "accepted",
+            "accepted_on",
+            "created",
+            "modified",
+        )
+        read_only_fields = tuple(filter(lambda x: x != "accepted", fields))

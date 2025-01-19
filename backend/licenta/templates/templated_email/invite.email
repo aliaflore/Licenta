@@ -1,0 +1,11 @@
+{% block subject %}Patient invite from {{doctor_fullname}}{% endblock %}
+{% block plain %}
+  Hi {{full_name}},
+
+  You are requested to join the platform as a patient by {{doctor_fullname}}. Please click the link below to join the platform.
+
+  {{invite_url}}
+
+  In case this, doesn't work, please accept the inivite here http://test.com/invite.
+
+{% endblock %}

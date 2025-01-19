@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "dj_rest_auth",
     "drf_spectacular",
-    "encrypted_model_fields",
+    "encrypted_model_fields"
 ]
 
 SITE_ID = 1
@@ -183,3 +183,7 @@ LOGGING = {
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
 FIELD_ENCRYPTION_KEY = os.environ.get('FIELD_ENCRYPTION_KEY', '')
+
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
+
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')

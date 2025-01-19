@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from celery.app.task import Task
+Task.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls) # type: ignore[attr-defined]
+
 
 def main():
     """Run administrative tasks."""

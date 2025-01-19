@@ -3,7 +3,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.template.defaultfilters import escape
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, ExtraAnalysisCategories, Translation, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult
+from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, ExtraAnalysisCategories, Translation, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult, PatientInvite
+from django.utils.translation import gettext_lazy as _
 
 
 class AnalysisProviderAdmin(admin.ModelAdmin):
@@ -19,7 +20,24 @@ class AnalysisCategoryNameAdmin(admin.ModelAdmin):
 
 
 class UserAdmin(BaseUserAdmin):
-    pass
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Doctor Information"), {"fields": ("is_doctor",)}),
+    )
 
 
 class AnalysisPDFAdmin(admin.ModelAdmin):
@@ -36,7 +54,6 @@ class AnalysisResultInline(admin.TabularInline):
 
 class AnalysisAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'source']
-    inlines = [AnalysisResultInline]
 
 
 class AnalysisResultAdmin(admin.ModelAdmin):
@@ -49,6 +66,9 @@ class AnalysisResultAdmin(admin.ModelAdmin):
     analysis_link.allow_tags = True
     analysis_link.short_description = "Analysis"
 
+
+class PatientInviteAdmin(admin.ModelAdmin):
+    list_display = ['doctor', 'patient', 'accepted']
 
 class TranslationAdmin(admin.ModelAdmin):
     list_display = ['original_text', 'translated_text', 'source_language', 'target_language']
@@ -63,3 +83,4 @@ admin.site.register(Analysis, AnalysisAdmin)
 admin.site.register(AnalysisResult, AnalysisResultAdmin)
 admin.site.register(Translation, TranslationAdmin)
 admin.site.register(ExtraAnalysisCategories)
+admin.site.register(PatientInvite, PatientInviteAdmin)

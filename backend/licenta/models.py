@@ -51,7 +51,7 @@ class AnalysisCategoryName(models.Model):
 
 
 class User(AbstractUser):
-    pass
+    is_doctor = models.BooleanField(default=False)
 
 
 class AbstractPDF(models.Model):
@@ -96,7 +96,6 @@ class Analysis(models.Model):
         AnalysisPDF,
         on_delete=models.CASCADE,
     )
-    created = models.DateTimeField(auto_now_add=True)
 
     notes = EncryptedTextField(blank=True)
     date = EncryptedDateField(null=True)
@@ -147,3 +146,28 @@ class ExtraAnalysisCategories(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PatientInvite(models.Model):
+    doctor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="patients_invited",
+    )
+    patient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="doctor_invites",
+    )
+    accepted = models.BooleanField(default=False)
+    expires = models.DateTimeField(blank=True, null=True)
+
+    accepted_on = models.DateTimeField(null=True, blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Patient Invite"
+        verbose_name_plural = "Patient Invites"
+        unique_together = ("doctor", "patient")
