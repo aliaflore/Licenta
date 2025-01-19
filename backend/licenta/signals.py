@@ -35,7 +35,7 @@ def suggest_fix(sender, instance: AnalysisResult, **kwargs):
 
 @receiver(post_save, sender=PatientInvite)
 def send_invite_email(sender, instance: PatientInvite, **kwargs):
-    if not instance.accepted:
+    if instance.accepted:
         return
 
     notify_patient_about_invite.delay(instance.pk)

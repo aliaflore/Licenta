@@ -12,6 +12,9 @@ from licenta.models import (
     PatientInvite,
 )
 
+from django.utils import timezone 
+from datetime import timedelta
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -376,3 +379,7 @@ class DoctorInviteSerializer(serializers.HyperlinkedModelSerializer):
             "modified",
         )
         read_only_fields = tuple(filter(lambda x: x != "accepted", fields))
+
+    def update(self, instance, validated_data):
+        instance.expires = timezone.now() + timedelta(days=30)
+        return super().update(instance, validated_data)

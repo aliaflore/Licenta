@@ -1,7 +1,6 @@
 <script lang="ts">
-    import EmailSync from 'svelte-material-icons/EmailSync.svelte';
-    import TrashCan from 'svelte-material-icons/TrashCan.svelte';
-    import BadgeAccount from 'svelte-material-icons/BadgeAccount.svelte';
+    import Check from 'svelte-material-icons/Check.svelte';
+    import AccountRemove from 'svelte-material-icons/AccountRemove.svelte';
     import moment from 'moment';
     import type { ActionData } from './$types';
 
@@ -12,7 +11,6 @@
     import { Datatable, Pagination, RowCount, RowsPerPage, type State, TableHandler, ThSort } from '@vincjo/datatables/server'
 	import { onMount } from 'svelte';
 	import type { PatientInvite } from '$lib/types';
-	import { viewAsUser } from '$lib';
 
     const table = new TableHandler<PatientInvite>([], { rowsPerPage: 10 })
 
@@ -80,24 +78,16 @@
                                 </td>
                                 <td>
                                     <div class="flex flex-row w-auto h-auto gap-1">
-                                        {#if row.accepted}
-                                        <button class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" onclick={
-                                            () => viewAsUser.set(row.patient)
-                                        }>
-                                            <BadgeAccount size={24} />
-                                        </button>
-                                        {:else}
-                                        <form method="POST" action="?/resend">
+                                        <form method="POST" action="?/accept">
                                             <input type="hidden" name="pk" value={row.pk} />
                                             <button type="submit" class="btn-icon btn-sm bg-yellow-500 [&>*]:pointer-events-none">
-                                                <EmailSync size={24} />
+                                                <Check size={24} />
                                             </button>
                                         </form>
-                                        {/if}
                                         <form method="POST" action="?/delete">
                                             <input type="hidden" name="pk" value={row.pk} />
-                                            <button class="btn-icon btn-sm bg-red-500 [&>*]:pointer-events-none">
-                                                <TrashCan size={24} />
+                                            <button type="submit" class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none">
+                                                <AccountRemove size={24} />
                                             </button>
                                         </form>
                                     </div>
@@ -112,22 +102,5 @@
                 {/snippet}
             </Datatable>
         </div>
-    </div>
-</div>
-
-<div class="flex justify-center align-middle">
-    <div class="form-container m-10 w-auto max-w-5xl">
-        <form method="POST" action="?/invite" class="form">
-            <div class="flex gap-2 flex-col justify-center align-middle">
-                <div class="form-control">
-                    {#if form?.errors?.email}
-                        <div class="alert alert-error">{form?.errors?.email}</div>
-                    {/if}
-                    <label for="email" class="label">Email</label>
-                    <input type="email" name="email" id="email" class="input" required />
-                </div>
-                <button type="submit" class="btn variant-filled-tertiary">Invite this user</button>
-            </div>
-        </form>
     </div>
 </div>

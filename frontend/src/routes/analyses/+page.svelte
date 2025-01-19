@@ -10,14 +10,19 @@
     import { Datatable, Pagination, RowCount, RowsPerPage, type State, TableHandler, ThSort } from '@vincjo/datatables/server'
 	import type { AnalysisPDF } from '$lib/types';
 	import { onMount } from 'svelte';
+	import { viewAsUser } from '$lib';
 
     const table = new TableHandler<AnalysisPDF>([], { rowsPerPage: 10 })
 
-    table.load((state: State) => reload(state));
+    table.load((state: State) => reload(state, $viewAsUser));
 
     onMount(() => {
         table.invalidate();
+        viewAsUser.subscribe((value) => {
+            table.invalidate();
+        });
     });
+
 
     const popupDocument: PopupSettings = {
         event: 'hover',
@@ -95,21 +100,29 @@
                                         <div class="card p-4 shadow-xl" data-popup="popupDocument">
                                             <div><p>View Document</p></div>
                                         </div>
-                                        <a href={row.file} class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
+                                        <a href={row.file} target="_blank" class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
                                             <FileDocument size={24} />
                                         </a>
                                         {#if !!row.analysis_id}
                                         <div class="card p-4 shadow-xl" data-popup="popupInspect">
                                             <div><p>Inspect the Analyses</p></div>
                                         </div>
-                                        <a href={`/analyses/${row.analysis_id}`} target="_blank" class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none" use:popup={popupInspect}>
+
+                                        {#if $viewAsUser}
+                                        <a href={`/analyses/${row.analysis_id}?user=${$viewAsUser.pk}`} class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none" use:popup={popupInspect}>
                                             <Play size={24} />
                                         </a>
+                                        {:else}
+                                        <a href={`/analyses/${row.analysis_id}`} class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none" use:popup={popupInspect}>
+                                            <Play size={24} />
+                                        </a>
+                                        {/if}
+
                                         {:else}
                                         <div class="card p-4 shadow-xl" data-popup="popupInspect">
                                             <div><p>Not yet analyzed</p></div>
                                         </div>
-                                        <btn disabled target="_blank" class="btn-icon btn-sm [&>*]:pointer-events-none" use:popup={popupInspect}>
+                                        <btn disabled class="btn-icon btn-sm [&>*]:pointer-events-none" use:popup={popupInspect}>
                                             <ConicGradient stops={conicStops} spin width="w-10" />
                                         </btn>
                                         {/if}

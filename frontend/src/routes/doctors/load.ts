@@ -1,11 +1,11 @@
-import type { AnalysisPDFResult, Error, User } from '$lib/types';
+import type { PatientInviteResult, Error } from '$lib/types';
 import type { State } from '@vincjo/datatables/server';
 
-type result = AnalysisPDFResult & Error;
+type result = PatientInviteResult & Error;
 
-export const reload = async (state: State, viewAsUserState: User | null) => {
+export const reload = async (state: State) => {
 	const response = await fetch(
-        `/api/analysis-pdf/?${getParams(state, viewAsUserState)}`, 
+        `/api/doctor-invites/?${getParams(state)}`, 
         {
             method: 'GET',
         }
@@ -19,8 +19,8 @@ export const reload = async (state: State, viewAsUserState: User | null) => {
     return json.results;
 };
 
-const getParams = (state: State, viewAsUserState: User | null) => {
-	const { rowsPerPage, sort, offset } = state;
+const getParams = (state: State) => {
+	const { rowsPerPage, sort, offset, search } = state;
 
 	let params = `offset=${offset}`;
 
@@ -32,8 +32,8 @@ const getParams = (state: State, viewAsUserState: User | null) => {
         params += `&ordering=${sort.direction === 'asc' ? '-' : ''}${sort.field?.toString()}`;
     }
 
-    if(viewAsUserState) {
-        params += `&user=${viewAsUserState.pk}`;
+    if(search) {
+        params += `&search=${search}`;
     }
 
 	return params;

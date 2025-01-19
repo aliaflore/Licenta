@@ -13,6 +13,7 @@
     import { storePopup } from '@skeletonlabs/skeleton';
 	import { Breadcrumbs } from 'svelte-breadcrumbs';
 	import { page } from '$app/stores';
+	import { viewAsUser } from '$lib';
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	interface Props {
@@ -66,10 +67,19 @@
 								<span><AccountWrench size={30} /></span>
 								<span>Setarile contului</span>
 							</a> -->
-                            {#if data?.user?.is_doctor}
+                            {#if data?.user?.is_doctor && !$viewAsUser}
                             <a href="/patient-invites" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Patients</span>
+							</a>
+                            {:else if !$viewAsUser}
+                            <a href="/upload" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Upload</span>
+							</a>
+                            <a href="/doctors" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Doctors</span>
 							</a>
                             {/if}
                             <a href="/analyses" class="btn btn-sm variant-ghost-surface">
@@ -80,14 +90,17 @@
 								<span><AccountCircle size={30} /></span>
 								<span>Radiographies</span>
 							</a>
-                            <a href="/upload" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
-								<span>Upload</span>
-							</a>
+                            {#if !$viewAsUser}
 							<a href="/" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Profilul meu</span>
 							</a>
+                            {:else}
+                            <button class="btn btn-sm variant-ghost-surface" onclick={() => viewAsUser.set(null)}>
+								<span><AccountCircle size={30} /></span>
+								<span>Viewing as: <b>{$viewAsUser.full_name}</b></span>
+							</button>
+                            {/if}
 						{:else}
 							<a href="/register" class="btn btn-sm variant-ghost-surface">
 								<span><AccountQuestion size={30} /></span>
