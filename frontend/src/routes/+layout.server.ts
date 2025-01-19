@@ -14,7 +14,6 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
     const result = await response.json() as UResult;
     if (result?.error) {
         return {
-            loggedIn: false,
             user: null,
             analysisProviders: null
         }
@@ -28,13 +27,11 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
     const providers = await response2.json() as AResult;
     if (providers?.error) {
         return {
-            loggedIn: false,
             user: null,
             analysisProviders: null
         }
     }
     return {
-        loggedIn: true,
         user: result.user,
         analysisProviders: providers
     };

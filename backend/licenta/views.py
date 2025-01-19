@@ -219,17 +219,17 @@ class HistoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         return queryset
 
 
-class AnalysisProviderViewSet(viewsets.ModelViewSet):
+class AnalysisProviderViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = AnalysisProvider.objects.all()
     serializer_class = FullAnalysisProviderSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = None
 
 
 class PatientInvitesViewSet(viewsets.ModelViewSet):
     queryset = PatientInvite.objects.all()
     serializer_class = PatientInviteSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, PermissionIsDoctor]
     filter_backends = [filters.SearchFilter]
     search_fields = ['patient__email', 'patient__username']
 

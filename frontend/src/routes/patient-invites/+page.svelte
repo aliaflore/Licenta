@@ -2,6 +2,9 @@
     import EmailSync from 'svelte-material-icons/EmailSync.svelte';
     import TrashCan from 'svelte-material-icons/TrashCan.svelte';
     import moment from 'moment';
+    import type { ActionData } from './$types';
+
+    let { form }: { form: ActionData } = $props();
 
     import { reload } from './load';
 
@@ -99,5 +102,22 @@
                 {/snippet}
             </Datatable>
         </div>
+    </div>
+</div>
+
+<div class="flex justify-center align-middle">
+    <div class="form-container m-10 w-auto max-w-5xl">
+        <form method="POST" action="?/invite" class="form">
+            <div class="flex gap-2 flex-col justify-center align-middle">
+                <div class="form-control">
+                    {#if form?.errors?.email}
+                        <div class="alert alert-error">{form?.errors?.email}</div>
+                    {/if}
+                    <label for="email" class="label">Email</label>
+                    <input type="email" name="email" id="email" class="input" required />
+                </div>
+                <button type="submit" class="btn variant-filled-tertiary">Invite this user</button>
+            </div>
+        </form>
     </div>
 </div>

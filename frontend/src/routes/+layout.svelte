@@ -53,7 +53,7 @@
 					{/snippet}
 				{#snippet trail()}
 					
-						{#if data?.loggedIn}
+						{#if data?.user}
 							<!-- <a href="/history" class="btn btn-sm variant-ghost-surface">
 								<span><History size={30} /></span>
 								<span>Istoricul datelor</span>
@@ -66,6 +66,12 @@
 								<span><AccountWrench size={30} /></span>
 								<span>Setarile contului</span>
 							</a> -->
+                            {#if data?.user?.is_doctor}
+                            <a href="/patient-invites" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Patients</span>
+							</a>
+                            {/if}
                             <a href="/analyses" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Analyses</span>

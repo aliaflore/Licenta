@@ -301,11 +301,12 @@ class ListAnalysisSerializer(serializers.HyperlinkedModelSerializer):
 class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
     doctor = UserSerializer(read_only=True)
     patient = UserSerializer(read_only=True)
-    patient_id = serializers.PrimaryKeyRelatedField(
+    email = serializers.SlugRelatedField(
         queryset=User.objects.all(),
         required=True,
         write_only=True,
         source="patient",
+        slug_field="email"
     )
     url = serializers.HyperlinkedIdentityField(
         view_name="patient-invites-detail", lookup_field="pk"
@@ -317,7 +318,7 @@ class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
             "url",
             "pk",
             "patient",
-            "patient_id",
+            "email",
             "doctor",
             "expires",
             "accepted",
@@ -325,12 +326,12 @@ class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
             "created",
             "modified",
         )
-        read_only_fields = tuple(filter(lambda x: x != "expires", fields))
+        read_only_fields = tuple(filter(lambda x: x != "email", fields))
 
     def validate(self, attrs):
         if self.context["request"].user == attrs["patient"]:
             raise serializers.ValidationError(
-                {"patient_id": "You can't invite yourself to be your patient"}
+                {"email": "You can't invite yourself to be your patient"}
             )
         if PatientInvite.objects.filter(
             patient=attrs["patient"],
@@ -338,13 +339,13 @@ class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
             accepted=False,
         ).exists():
             raise serializers.ValidationError(
-                {"patient_id": "You already invited this user to be your patient"}
+                {"email": "You already invited this user to be your patient"}
             )
         if PatientInvite.objects.filter(
             patient=attrs["patient"], doctor=self.context["request"].user, accepted=True
         ).exists():
             raise serializers.ValidationError(
-                {"patient_id": "This user is already your patient"}
+                {"email": "This user is already your patient"}
             )
         return super().validate(attrs)
 
