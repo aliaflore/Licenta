@@ -7,11 +7,11 @@
 	export let data: HistoryData;
 
 	let chartDiv: HTMLDivElement;
+    const option = generateChartOptions(data);
 
 	onMount(() => {
+        if (!option) return;
 		const chart = echarts.init(chartDiv);
-		const option = generateChartOptions(data);
-        console.log(option);
 		chart.setOption(option);
 
         window.addEventListener('resize', () => {
@@ -20,4 +20,6 @@
 	});
 </script>
 
-<div bind:this={chartDiv} class="w-svw md:w-[60vw] sm:w-[80vw] lg:w-[50vw] h-80"></div>
+{#if option}
+    <div bind:this={chartDiv} class="w-svw md:w-[60vw] sm:w-[80vw] lg:w-[50vw] h-80"></div>
+{/if}

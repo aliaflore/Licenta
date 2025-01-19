@@ -10,9 +10,9 @@ export const load: PageServerLoad = async ({ parent, fetch }) => {
             method: 'GET',
         },
     ));
-    const result = (await response.json() || []) as HistoryDataResult;
+    const history = (await response.json() || []) as HistoryDataResult;
     return {
         ...parentData,
-        history: result.results
+        history: history,
     };
 };

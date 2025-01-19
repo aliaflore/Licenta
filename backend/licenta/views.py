@@ -230,6 +230,8 @@ class PatientInvitesViewSet(viewsets.ModelViewSet):
     queryset = PatientInvite.objects.all()
     serializer_class = PatientInviteSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['patient__email', 'patient__username']
 
     def get_queryset(self):
         request: Request = self.request # type: ignore

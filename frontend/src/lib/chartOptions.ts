@@ -3,23 +3,31 @@ import * as echarts from 'echarts';
 
 type EChartsOption = echarts.EChartsOption;
 
-export function generateChartOptions(data: HistoryData): EChartsOption {
+export function generateChartOptions(data: HistoryData): EChartsOption | null {
     const dates: string[] = [];
     const percentages: number[] = [];
     const rangeMins: number[] = [];
     const rangeMaxs: number[] = [];
     const results: number[] = [];
     const suggestions: (string | undefined)[] = [];
-    const unit = data.data[0]?.measurement_unit || '';
+    let unit = data.data[0]?.measurement_unit || '';
+    if (unit === 'nan') {
+        unit = '';
+    }
 
     data.data.forEach(item => {
         const result = Number(item.result);
-        const percentage = ((result - item.range_min) / (item.range_max - item.range_min)) * 100;
-        results.push(item.result);
+        const rangeMin = item.range_min ? Number(item.range_min) : null;
+        const rangeMax = item.range_max ? Number(item.range_max) : null;
+        if (rangeMin === null || rangeMax === null || isNaN(result)) {
+            return;
+        }
+        const percentage = ((result - rangeMin) / (rangeMax - rangeMin)) * 100;
+        results.push(result);
         percentages.push(percentage);
         dates.push(item.date || 'N/A');
-        rangeMins.push(item.range_min);
-        rangeMaxs.push(item.range_max);
+        rangeMins.push(rangeMin);
+        rangeMaxs.push(rangeMax);
         suggestions.push(item.suggestion);
     });
 
@@ -29,6 +37,10 @@ export function generateChartOptions(data: HistoryData): EChartsOption {
 
     const yMin = minPercentage > 0 ? Math.max(0, minPercentage - rangeBuffer) : minPercentage - rangeBuffer;
     const yMax = Math.max(maxPercentage, 100 + rangeBuffer);
+
+    if (results.length === 0) {
+        return null;
+    }
 
     return {
         tooltip: {
@@ -86,7 +98,7 @@ export function generateChartOptions(data: HistoryData): EChartsOption {
             }
         ],
         title: {
-            text: data.name,
+            text: `${data.category.name} - ${data.name}`,
             left: 'center',
             top: 10,
             textStyle: {

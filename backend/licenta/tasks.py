@@ -106,9 +106,9 @@ def update_all_analysis_categories():
     created_categories = AnalysisCategory.objects.bulk_create(
         [AnalysisCategory(name=base) for base in categories.keys()]
     )
-    analysis_names = []
+    analysis_names = set()
     for created_category, synonims in zip(created_categories, categories.values()):
-        analysis_names.extend(
+        analysis_names |= set(
             [
                 AnalysisCategoryName(name=synonim, category=created_category)
                 for synonim in synonims

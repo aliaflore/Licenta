@@ -1,9 +1,15 @@
 export interface User {
-	url: string;
-	username: string;
-	email: string;
-	is_staff: boolean;
-	id: number;
+    pk:           number;
+    url:          string;
+    email:        string;
+    username:     string;
+    first_name:   string;
+    last_name:    string;
+    is_staff:     boolean;
+    is_doctor:    boolean;
+    is_superuser: boolean;
+    full_name:    string;
+    date_joined:  Date;
 }
 
 export interface Error {
@@ -141,21 +147,31 @@ export interface RadiographyPDF {
 
 export type RadiographyPDFResult = PaginatedResult<RadiographyPDF>;
 
-export type HistoryData = {
-	name: string;
-    category: string;
-	data: {
-		date: string;
-		is_numeric: boolean;
-		result: number;
-		range_min: number;
-		range_max: number;
-		expected: boolean;
-		measurement_unit: string;
-		suggestion?: string;
-	}[];
-};
+export type HistoryAnalysisResult = AnalysisResult & { date?: string };
 
-export type HistoryDataResult = {
-	results: HistoryData[];
-};
+export interface HistoryData {
+    name:     string;
+    category: SimpleAnalysisCategory;
+    data:     HistoryAnalysisResult[];
+}
+
+export interface SimpleAnalysisCategory {
+    pk:   number;
+    name: string;
+}
+
+export type HistoryDataResult = HistoryData[];
+
+export interface PatientInvite {
+    url:         string;
+    pk:          number;
+    patient:     User;
+    doctor:      User;
+    expires:     Date;
+    accepted:    boolean;
+    accepted_on: Date;
+    created:     Date;
+    modified:    Date;
+}
+
+export type PatientInviteResult = PaginatedResult<PatientInvite>;

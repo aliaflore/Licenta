@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
-    import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
-	import Chart from "./Chart.svelte";
+	import Chart from "../lib/Chart.svelte";
 
     interface Props {
         data: PageData;
