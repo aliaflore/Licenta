@@ -6,6 +6,9 @@
 
 	export let data: HistoryData;
 
+    export let width = "w-svw md:w-[60vw] sm:w-[80vw] lg:w-[50vw]";
+    export let height = "h-80";
+
 	let chartDiv: HTMLDivElement;
     const option = generateChartOptions(data);
 
@@ -21,5 +24,5 @@
 </script>
 
 {#if option}
-    <div bind:this={chartDiv} class="w-svw md:w-[60vw] sm:w-[80vw] lg:w-[50vw] h-80"></div>
+    <div bind:this={chartDiv} class={`${width} ${height}`}></div>
 {/if}

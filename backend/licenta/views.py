@@ -5,7 +5,7 @@ from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite
+from licenta.models import AnalysisCategory, AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite
 from licenta.serializers import (
     DoctorInviteSerializer,
     FullAnalysisCategorySerializer,
@@ -19,7 +19,11 @@ from licenta.serializers import (
     RadiographyPDFSerializer,
     AnalysisResultsSerializer,
 )
-from .tasks import *
+from .tasks import add_suggestion, notify_patient_about_invite, extract_data_from_pdf, import_all_analysis_categories
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class PermissionIsDoctor(permissions.BasePermission):
@@ -170,9 +174,10 @@ class AnalysisResultsViewSet(viewsets.ModelViewSet):
                 queryset= super().get_queryset().filter(analysis__source__user_id=request.query_params["user"])
         if request.query_params.get("category"):
             queryset = queryset.filter(category_id=request.query_params["category"])
-        if request.query_params.get("name"):
+        names = request.query_params.getlist("name")
+        if names:
             data = queryset.all()
-            return filter(lambda x: x.name == request.query_params["name"], data)
+            return filter(lambda x: x.name in names, data)
         return queryset
 
     @action(detail=True, methods=["post"])
@@ -211,11 +216,10 @@ class HistoryViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                 )
             ):
                 queryset= super().get_queryset().filter(analysis__source__user_id=request.query_params["user"])
-        if request.query_params.get("category"):
-            queryset = queryset.filter(category_id=request.query_params["category"])
-        if request.query_params.get("name"):
-            data = queryset.all()
-            return filter(lambda x: x.name == request.query_params["name"], data)
+        analyses = request.query_params.getlist("analysis")
+        if analyses:
+            analyses_tuples = set(map(lambda x: tuple(x.split(":")), analyses))
+            return filter(lambda x: (x.category.name, x.name) in analyses_tuples, queryset.all())
         return queryset
 
 

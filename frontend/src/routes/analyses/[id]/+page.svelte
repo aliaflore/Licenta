@@ -1,9 +1,14 @@
 <script lang="ts">
+	import Check from "svelte-material-icons/Check.svelte";
+	import Close from "svelte-material-icons/Close.svelte";
+	import Help from "svelte-material-icons/Help.svelte";
+
 	import { Datatable, Pagination, RowCount, TableHandler, ThFilter, ThSort } from '@vincjo/datatables';
     import type { PageData } from './$types';
 	import type { AnalysisResult } from '$lib/types';
     import Play from 'svelte-material-icons/Play.svelte';
-	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
+	import { Accordion, AccordionItem, Tab, TabGroup } from '@skeletonlabs/skeleton';
+	import Chart from '$lib/Chart.svelte';
 
     export let data: PageData;
 
@@ -38,14 +43,46 @@
             border=""
             class="bg-surface-100-800-token w-full"
         >
-            <Tab bind:group={tabSet} name="tab1" value={0}>(label 1)</Tab>
-            <Tab bind:group={tabSet} name="tab2" value={1}>(label 2)</Tab>
+            <Tab bind:group={tabSet} name="tab1" value={0}>Analyses</Tab>
+            <Tab bind:group={tabSet} name="tab2" value={1}>Suggestions</Tab>
             <Tab bind:group={tabSet} name="tab3" value={2}>Rezultate</Tab>
             <svelte:fragment slot="panel">
                 {#if tabSet === 0}
-                    dasa
+                    <div class="flex items-center w-full flex-col gap-2 ">
+                        {#each data.historyData as item}
+                        <div class="bg-white">
+                            <Chart data={item} height="h-60" width="w-[40vw]" />
+                        </div>
+                        {/each}
+                    </div>
                 {:else if tabSet === 1}
-                    asdasdas
+                    <Accordion autocollapse>
+                        {#each data.analysis.results as result}
+                        <AccordionItem>
+                            <svelte:fragment slot="lead">
+                                {#if result.in_range}
+                                    <Check size={24} />
+                                {:else if result.range_min !== null && result.range_max !== null}
+                                    <Close size={24} />
+                                {:else}
+                                    <Help size={24} />
+                                {/if}
+                            </svelte:fragment>
+                            <svelte:fragment slot="summary">
+                                {result.category.name} - {result.name}
+                            </svelte:fragment>
+                            <svelte:fragment slot="content">
+                                {#if result.suggestion}
+                                    {result.suggestion}
+                                {:else}
+                                    <div class="text-gray-200">
+                                        No suggestions
+                                    </div>
+                                {/if}
+                            </svelte:fragment>
+                        </AccordionItem>
+                        {/each}
+                    </Accordion>
                 {:else if tabSet === 2}
                     <Datatable basic {table}>
                         <table class="table table-compact !table-hover !w-[50vw]">
@@ -85,4 +122,4 @@
             </svelte:fragment>
         </TabGroup>
     </div>
-  </div>
+</div>
