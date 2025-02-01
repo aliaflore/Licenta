@@ -1,30 +1,32 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
+interface LoginResponse {
+    username?: string;
+    password?: string;
+    non_field_errors?: string[];
+}
+
 export const actions = {
-    default: async ({ request, fetch, url }) => {
+    default: async ({ request, fetch, url, cookies }) => {
         const data = await request.formData();
-        const username = data.get('username')?.toString() || '';
-        const password = data.get('password')?.toString() || '';
 
         const response = (await fetch(
             url.origin + '/api/dj-rest-auth/login/',
             {
                 method: 'POST',
-                body: JSON.stringify({ username: username, password: password }),
-                headers:
-                {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                body: data,
+                headers: {
+                    "X-CSRFToken": cookies.get('csrftoken') || '',
                 }
             }
         ));
-        const result = await response.json() as any;
+        const result = await response.json() as LoginResponse;
 
-        if (result?.key) {
+        if (response.ok) {
             redirect(302, '/');
         }
 
-        return { error: result?.non_field_errors };
+        return result;
     },
 } satisfies Actions;

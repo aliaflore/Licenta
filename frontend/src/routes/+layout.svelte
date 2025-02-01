@@ -97,9 +97,9 @@
 							</a>
                             {/if}
                             {#if !$viewAsUser}
-							<a href="/" class="btn btn-sm variant-ghost-surface">
+							<a href="/profile" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
-								<span>Profilul meu</span>
+								<span>My profile</span>
 							</a>
                             {:else}
                             <button class="btn btn-sm variant-ghost-surface" onclick={() => viewAsUser.set(null)}>

@@ -1,4 +1,5 @@
 import itertools
+import logging
 from rest_framework import serializers
 
 from licenta.models import (
@@ -17,9 +18,13 @@ from datetime import timedelta
 
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
+logger = logging.getLogger(__name__)
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField()
+    password1 = serializers.CharField(write_only=True, required=False)
+    password2 = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -35,11 +40,39 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "is_superuser",
             "full_name",
             "date_joined",
+            "password1",
+            "password2",
         )
-        read_only_fields = fields
+        read_only_fields = tuple(filter(lambda x: x not in (
+            "first_name", "last_name"
+        ), fields))
 
     def get_full_name(self, obj):
         return obj.get_full_name() or obj.username
+
+    def validate(self, attrs):
+        if ("password1" in attrs and "password2" not in attrs):
+            raise serializers.ValidationError(
+                {"password2": "This field is required"}
+            )
+        if ("password1" not in attrs and "password2" in attrs):
+            raise serializers.ValidationError(
+                {"password1": "This field is required"}
+            )
+        if "password1" in attrs and "password2" in attrs:
+            if attrs["password1"] != attrs["password2"]:
+                raise serializers.ValidationError(
+                    {"password2": "Passwords do not match"}
+                )
+        return super().validate(attrs)
+
+    def update(self, instance, validated_data):
+        user: User = super().update(instance, validated_data)
+        if "password1" in validated_data:
+            logger.info("Setting password for user %s: %s", user, validated_data["password1"])
+            user.set_password(validated_data["password1"])
+            user.save()
+        return user
 
 
 class AnalysisProviderSerializer(serializers.HyperlinkedModelSerializer):

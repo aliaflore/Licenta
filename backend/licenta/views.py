@@ -39,11 +39,28 @@ class PermissionIsDoctor(permissions.BasePermission):
 class UserViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated, PermissionIsDoctor]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_doctor:
+            return super().get_queryset()
+        return super().get_queryset().filter(pk=self.request.user.pk)
+
+    def check_permissions(self, request):
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if request.user.is_superuser or request.method in permissions.SAFE_METHODS:
+            return
+        if request.user.is_doctor and request.user.pk != int(request.parser_context["kwargs"]["pk"]):
+            raise NotAuthenticated
+        if request.user.pk != int(request.parser_context["kwargs"]["pk"]):
+            raise NotAuthenticated
 
     @action(detail=False)
     def me(self, request):
