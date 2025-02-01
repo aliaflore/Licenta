@@ -13,7 +13,6 @@ interface ProfileErrorResponse {
 export const actions = {
     edit: async ({ request, fetch, url, cookies }) => {
         const data = await request.formData();
-        console.log(data);
         const pk = data.get('pk');
         if (!pk) {
             return;
@@ -39,6 +38,31 @@ export const actions = {
 
         return {
             modified: true,
+        };
+    },
+    delete: async ({ request, fetch, url, cookies }) => {
+        const data = await request.formData();
+        const pk = data.get('pk');
+        if (!pk) {
+            return;
+        }
+
+        const response = (await fetch(
+            url.origin + `/api/users/${pk}/`,
+            {
+                method: 'DELETE',
+                body: data,
+                headers: {
+                    "X-CSRFToken": cookies.get('csrftoken') || '',
+                }
+            }
+        ));
+        if (response.ok) {
+            redirect(301, '/login');
+        }
+
+        return {
+            deleted: false,
         };
     },
 } satisfies Actions;

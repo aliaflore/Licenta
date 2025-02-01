@@ -4,8 +4,6 @@
 
 	export let data: PageData;
     export let form: ActionData;
-
-    console.log(data);
 </script>
 
 <svelte:head>
@@ -20,6 +18,14 @@
                 <div class="alert-message">
                     <h3 class="h3">Success!</h3>
                     <p>The changes have been saved!</p>
+                </div>
+            </aside>
+            {/if}
+            {#if form?.deleted === false}
+            <aside class="alert variant-ghost !bg-red-500">
+                <div class="alert-message">
+                    <h3 class="h3">Error!</h3>
+                    <p>Could not delete your account!</p>
                 </div>
             </aside>
             {/if}
