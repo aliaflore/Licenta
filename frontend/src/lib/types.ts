@@ -120,6 +120,7 @@ export interface AnalysisResult {
 	range_max: null | string;
 	in_range: boolean | null;
 	suggestion: string;
+    approve_ai_suggestion: boolean;
 	doctor_note: string;
 	created: Date;
 	modified: Date;

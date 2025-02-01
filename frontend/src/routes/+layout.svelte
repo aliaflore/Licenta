@@ -86,6 +86,7 @@
 								<span>Doctors</span>
 							</a>
                             {/if}
+                            {#if !data?.user?.is_doctor || $viewAsUser}
                             <a href="/analyses" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Analyses</span>
@@ -94,6 +95,7 @@
 								<span><AccountCircle size={30} /></span>
 								<span>Radiographies</span>
 							</a>
+                            {/if}
                             {#if !$viewAsUser}
 							<a href="/" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>

@@ -124,6 +124,7 @@ class AnalysisResult(models.Model):
     range_max = EncryptedDecimalField(max_digits=10, decimal_places=2, null=True)
     in_range = EncryptedBooleanField(null=True)
     suggestion = EncryptedTextField(blank=True)
+    approve_ai_suggestion = EncryptedBooleanField(default=False)
 
     doctor_note = EncryptedTextField(blank=True)
 

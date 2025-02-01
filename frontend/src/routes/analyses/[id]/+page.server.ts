@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Analysis, HistoryDataResult } from '$lib/types';
 
@@ -44,10 +44,6 @@ export const actions = {
         if (!pk) {
             return;
         }
-        const pkInt = parseInt(pk.toString(), 10);
-        if (isNaN(pkInt)) {
-            return;
-        }
 
         const viewAsUser = data.get('viewas_user');
 
@@ -57,19 +53,13 @@ export const actions = {
                 method: 'PATCH',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    result: data.get('result'),
-                    measurement_unit: data.get('measurement_unit'),
-                    range_min: data.get('range_min'),
-                    range_max: data.get('range_max'),
-                    in_range: data.get('in_range') === 'on',
-                    doctor_note: data.get('doctor_note'),
-                }),
+                body: data
             }
         ));
-        return;
+        return {
+            edit_ok: response.ok
+        }
     },
     regenerate: async ({ request, fetch, url, cookies }) => {
         const data = await request.formData();
