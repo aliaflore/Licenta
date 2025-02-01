@@ -207,3 +207,7 @@ PAYMENT_MODEL = 'licenta.Payment'
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+REST_AUTH = {
+    'PASSWORD_RESET_SERIALIZER': 'licenta.serializers.PasswordResetSerializer'
+}

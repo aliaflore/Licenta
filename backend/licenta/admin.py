@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.template.defaultfilters import escape
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, ExtraAnalysisCategories, Translation, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult, PatientInvite
+from licenta.models import AnalysisCategory, AnalysisCategoryName, AnalysisProvider, ExtraAnalysisCategories, Payment, Translation, User, AnalysisPDF, RadiographyPDF, Analysis, AnalysisResult, PatientInvite
 from django.utils.translation import gettext_lazy as _
 
 
@@ -75,6 +75,9 @@ class PatientInviteAdmin(admin.ModelAdmin):
 class TranslationAdmin(admin.ModelAdmin):
     list_display = ['original_text', 'translated_text', 'source_language', 'target_language']
 
+class PaymentAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(AnalysisProvider, AnalysisProviderAdmin)
 admin.site.register(AnalysisCategory, AnalysisCategoryAdmin)
 admin.site.register(AnalysisCategoryName, AnalysisCategoryNameAdmin)
@@ -86,3 +89,4 @@ admin.site.register(AnalysisResult, AnalysisResultAdmin)
 admin.site.register(Translation, TranslationAdmin)
 admin.site.register(ExtraAnalysisCategories)
 admin.site.register(PatientInvite, PatientInviteAdmin)
+admin.site.register(Payment, PaymentAdmin)

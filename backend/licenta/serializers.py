@@ -1,5 +1,6 @@
 import itertools
 import logging
+import dj_rest_auth.serializers
 from rest_framework import serializers
 
 from licenta.models import (
@@ -17,6 +18,8 @@ from django.utils import timezone
 from datetime import timedelta
 
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from allauth.utils import build_absolute_uri
+from allauth.account.utils import user_pk_to_url_str
 
 logger = logging.getLogger(__name__)
 
@@ -436,3 +439,17 @@ class DoctorRegisterSerializer(RegisterSerializer):
         user.doctor_proof = self.cleaned_data.get("doctor_proof")
         user.save()
         return super().custom_signup(request, user)
+
+
+class PasswordResetSerializer(dj_rest_auth.serializers.PasswordResetSerializer):
+    @staticmethod
+    def url_generator(request, user, temp_key):
+        logger.info("Generating password reset URL for user %s", user)
+        url = build_absolute_uri(None, f"/password-reset/{user_pk_to_url_str(user)}/{temp_key}")
+        url = url.replace('%3F', '?')
+        return url
+
+    def get_email_options(self):
+        opts = super().get_email_options()
+        opts['url_generator'] = self.url_generator
+        return opts

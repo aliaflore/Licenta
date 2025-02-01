@@ -180,10 +180,10 @@ class PatientInvite(models.Model):
 
 class Payment(BasePayment):
     def get_failure_url(self):
-        return "http://localhost:8080/"
+        return "http://localhost:8080/failure"
 
     def get_success_url(self):
-        return "http://localhost:8080/"
+        return "http://localhost:8080/success"
 
     def get_purchased_items(self):
         return []

@@ -36,6 +36,7 @@
 				</label>
 
 				<button type="submit" class="btn btn-md w-full variant-ghost-surface mt-4">Login into your account</button>
+                <a href="/password-reset" type="submit" class="btn btn-md w-full variant-ghost-surface mt-8">Reset your password</a>
 			</form>
 		</div>
 	</div>

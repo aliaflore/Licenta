@@ -8,6 +8,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 from django.conf import settings
+from licenta.serializers import PasswordResetSerializer
 from licenta.views import (
     AnalysisCategoryViewSet,
     AnalysisProviderViewSet,
@@ -36,10 +37,13 @@ router.register(r"history", HistoryViewSet, basename="history")
 router.register(r"patient-invites", PatientInvitesViewSet, basename="patient-invites")
 router.register(r"doctor-invites", DoctorInvitesViewSet, basename="doctor-invites")
 
+import dj_rest_auth.urls
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    # path("api/auth/", include("django.contrib.auth.urls")),
     path('payments/', include('payments.urls')),
     path('payment-details/<int:payment_id>/', payment_details),
     path("api/dj-rest-auth/", include("dj_rest_auth.urls")),
