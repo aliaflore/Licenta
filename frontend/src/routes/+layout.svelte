@@ -107,6 +107,10 @@
 								<span>Viewing as: <b>{$viewAsUser.full_name}</b></span>
 							</button>
                             {/if}
+                            <a href="/logout" class="btn btn-sm variant-ghost-surface">
+                                <span><AccountArrowDown size={30} /></span>
+                                <span>Logout</span>
+                            </a>
 						{:else}
 							<a href="/register" class="btn btn-sm variant-ghost-surface">
 								<span><AccountQuestion size={30} /></span>
@@ -117,10 +121,6 @@
 								<span>Login</span>
 							</a>
                             {/if}
-                        <a href="/logout" class="btn btn-sm variant-ghost-surface">
-                            <span><AccountArrowDown size={30} /></span>
-                            <span>Logout</span>
-                        </a>
 					
 					{/snippet}
 			</AppBar>
