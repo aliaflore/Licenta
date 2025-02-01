@@ -261,6 +261,7 @@
 					<div class="overflow-y-scroll h-[84vh]">
 						<Accordion autocollapse>
 							{#each data.analysis.results as result}
+                                {#if !result.in_range}
 								<AccordionItem>
 									<svelte:fragment slot="lead">
 										{#if result.in_range}
@@ -275,7 +276,7 @@
 										{result.category.name} - {result.name}
 									</svelte:fragment>
 									<svelte:fragment slot="content">
-										{#if result.suggestion && result.doctor_note}
+										{#if result.suggestion}
 											<b>AI Suggestion:</b>
                                             {#if result.approve_ai_suggestion}
                                                 <b class="text-green-500">Approved by the Doctor</b>
@@ -286,19 +287,16 @@
 											{result.suggestion}
                                             <br />
                                             <br />
-											<b>Doctor Notes:</b>
+                                        {/if}
+										{#if result.doctor_note}
+                                            <b>Doctor Notes:</b>
                                             <b class="text-red-500">Additional notes written by the Doctor</b>
                                             <br/>
-											{result.doctor_note}
-										{:else if result.suggestion}
-											<b>AI Suggestion:</b> {result.suggestion}
-										{:else if result.doctor_note}
-											<b>Doctor Notes:</b> {result.doctor_note}
-										{:else}
-											<div class="text-gray-200">No suggestions</div>
+                                            {result.doctor_note}
 										{/if}
 									</svelte:fragment>
 								</AccordionItem>
+                                {/if}
 							{/each}
 						</Accordion>
 					</div>

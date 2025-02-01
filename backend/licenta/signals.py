@@ -74,3 +74,15 @@ def on_doctor_activated(sender, instance: User, **kwargs):
             settings.DEFAULT_FROM_EMAIL,
             [instance.email],
         )
+
+
+@receiver(post_save, sender=AnalysisPDF)
+def notify_doctor_about_new_analysis(sender, instance: AnalysisPDF, **kwargs):
+    for invite in PatientInvite.objects.filter(patient=instance.user, accepted=True):
+        logger.info("Notifying doctor %s about new analysis %s", invite.doctor.pk, instance.pk)
+        send_mail(
+            "New analysis uploaded",
+            f"Patient {instance.user.email} has uploaded a new analysis. You can now view it.",
+            settings.DEFAULT_FROM_EMAIL,
+            [invite.doctor.email],
+        )
