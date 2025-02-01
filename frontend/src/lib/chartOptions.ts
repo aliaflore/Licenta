@@ -9,7 +9,6 @@ export function generateChartOptions(data: HistoryData): EChartsOption | null {
     const rangeMins: number[] = [];
     const rangeMaxs: number[] = [];
     const results: number[] = [];
-    const suggestions: (string | undefined)[] = [];
     let unit = data.data[0]?.measurement_unit || '';
     if (unit === 'nan') {
         unit = '';
@@ -28,7 +27,6 @@ export function generateChartOptions(data: HistoryData): EChartsOption | null {
         dates.push(item.date || 'N/A');
         rangeMins.push(rangeMin);
         rangeMaxs.push(rangeMax);
-        suggestions.push(item.suggestion);
     });
 
     const minPercentage = Math.min(...percentages);
@@ -49,8 +47,7 @@ export function generateChartOptions(data: HistoryData): EChartsOption | null {
                 const dataIndex = params[0].dataIndex;
                 return `Date: ${dates[dataIndex]}<br/>
                         Result: ${results[dataIndex]} ${unit}<br/>
-                        Range: ${rangeMins[dataIndex]} - ${rangeMaxs[dataIndex]} ${unit}<br/>
-                        Suggestion: ${suggestions[dataIndex] || 'N/A'}`;
+                        Range: ${rangeMins[dataIndex]} - ${rangeMaxs[dataIndex]} ${unit}`;
             }
         },
         xAxis: {
@@ -98,7 +95,7 @@ export function generateChartOptions(data: HistoryData): EChartsOption | null {
             }
         ],
         title: {
-            text: `${data.category.name} - ${data.name}`,
+            text: `${data.category.name}\n${data.name}`,
             left: 'center',
             top: 10,
             textStyle: {

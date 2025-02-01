@@ -1,13 +1,14 @@
+from django.http import JsonResponse
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
-import itertools
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import AnalysisCategory, AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite
+from licenta.models import AnalysisCategory, AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite, Payment
 from licenta.serializers import (
     DoctorInviteSerializer,
+    DoctorRegisterSerializer,
     FullAnalysisCategorySerializer,
     FullAnalysisProviderSerializer,
     HistorySerializer,
@@ -19,8 +20,12 @@ from licenta.serializers import (
     RadiographyPDFSerializer,
     AnalysisResultsSerializer,
 )
-from .tasks import add_suggestion, notify_patient_about_invite, extract_data_from_pdf, import_all_analysis_categories
+from .tasks import add_suggestion, notify_patient_about_invite
 import logging
+from django.shortcuts import get_object_or_404, redirect
+from django.template.response import TemplateResponse
+from payments import get_payment_model, RedirectNeeded
+from dj_rest_auth.registration.views import RegisterView as BaseRegisterView
 
 
 logger = logging.getLogger(__name__)
@@ -181,7 +186,7 @@ class AnalysisResultsViewSet(viewsets.ModelViewSet):
         return queryset
 
     @action(detail=True, methods=["post"])
-    def regenerate_suggestions(self, request):
+    def regenerate_suggestions(self, request, pk=None):
         if not self.request.user.is_authenticated:
             raise NotAuthenticated
         object = self.get_object()
@@ -268,3 +273,31 @@ class DoctorInvitesViewSet(
         if request.user.is_superuser:
             return super().get_queryset()
         return super().get_queryset().filter(patient=request.user)
+
+
+def payment_details(request, payment_id):
+    payment: Payment = get_object_or_404(get_payment_model(), id=payment_id)
+
+    try:
+        form = payment.get_form(data=request.POST or None)
+    except RedirectNeeded as redirect_to:
+        return redirect(str(redirect_to))
+
+    return TemplateResponse(
+        request,
+        'payment.html',
+        {'form': form, 'payment': payment}
+    )
+
+
+class DoctorRegisterView(BaseRegisterView):
+    serializer_class = DoctorRegisterSerializer
+
+    def get_response_data(self, user):
+        return {
+            "message": "Please wait for the administrator to approve your account."
+        }
+
+
+def account_inactive(request):
+    return JsonResponse({"error": "Account is inactive. Please contact the administrator."}, status=400)

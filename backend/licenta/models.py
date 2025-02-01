@@ -3,6 +3,9 @@ from django.db import models
 from django.conf import settings
 import functools
 from encrypted_model_fields.fields import EncryptedTextField, EncryptedDateField, EncryptedMixin, EncryptedBooleanField
+from payments.models import BasePayment
+
+from licenta.helpers import RandomFileName
 
 
 class EncryptedDecimalField(EncryptedMixin, models.DecimalField):
@@ -52,6 +55,7 @@ class AnalysisCategoryName(models.Model):
 
 class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
+    doctor_proof = models.FileField(upload_to=RandomFileName("doctor-proofs"), blank=True, null=True)
 
 
 class AbstractPDF(models.Model):
@@ -76,7 +80,7 @@ class AbstractPDF(models.Model):
 
 
 class AnalysisPDF(AbstractPDF):
-    file = models.FileField(upload_to="analize-pdfs/")
+    file = models.FileField(upload_to=RandomFileName("analize-pdfs"))
 
     suggestion = EncryptedTextField(blank=True)
 
@@ -85,7 +89,7 @@ class AnalysisPDF(AbstractPDF):
 
 
 class RadiographyPDF(AbstractPDF):
-    file = models.FileField(upload_to="radiografie-pdfs/")
+    file = models.FileField(upload_to=RandomFileName("radiografie-pdfs"))
 
     def __str__(self):
         return self.file.name
@@ -171,3 +175,14 @@ class PatientInvite(models.Model):
         verbose_name = "Patient Invite"
         verbose_name_plural = "Patient Invites"
         unique_together = ("doctor", "patient")
+
+
+class Payment(BasePayment):
+    def get_failure_url(self):
+        return "http://localhost:8080/"
+
+    def get_success_url(self):
+        return "http://localhost:8080/"
+
+    def get_purchased_items(self):
+        return []

@@ -1,7 +1,9 @@
 from datetime import timedelta
+from django.conf import settings
+from django.core.mail import send_mail
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from licenta.models import AnalysisPDF, AnalysisResult, PatientInvite
+from licenta.models import AnalysisPDF, AnalysisResult, PatientInvite, User
 from licenta.tasks import add_suggestion, analyze_pdf, notify_patient_about_invite
 import logging
 from django.utils import timezone
@@ -45,3 +47,30 @@ def on_accepted_set(sender, instance: PatientInvite, **kwargs):
     if instance.accepted and not instance.accepted_on:
         instance.accepted_on = timezone.now()
         instance.expires = timezone.now() + timedelta(days=30)
+
+@receiver(post_save, sender=User)
+def on_doctor_registered(sender, instance: User, created=False, **kwargs):
+    if instance.is_doctor and not instance.is_active:
+        logger.info("Doctor %s registered, notifying admins", instance.pk)
+        for user in User.objects.filter(is_staff=True):
+            send_mail(
+                "Doctor registered",
+                f"Doctor {instance.email} has registered. Please verify their Doctor proof.",
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+            )
+
+
+@receiver(pre_save, sender=User)
+def on_doctor_activated(sender, instance: User, **kwargs):
+    if not instance.pk:
+        return
+    current_user = User.objects.get(pk=instance.pk)
+    if instance.is_doctor and instance.is_active and not current_user.is_active:
+        logger.info("Doctor %s activated, notifying the doctor", instance.pk)
+        send_mail(
+            "Doctor account activated",
+            "Your doctor account has been activated. You can now use the platform.",
+            settings.DEFAULT_FROM_EMAIL,
+            [instance.email],
+        )

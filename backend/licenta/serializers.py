@@ -15,6 +15,8 @@ from licenta.models import (
 from django.utils import timezone 
 from datetime import timedelta
 
+from dj_rest_auth.registration.serializers import RegisterSerializer
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -383,3 +385,19 @@ class DoctorInviteSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.expires = timezone.now() + timedelta(days=30)
         return super().update(instance, validated_data)
+
+
+class DoctorRegisterSerializer(RegisterSerializer):
+    doctor_proof = serializers.FileField(required=True)
+
+    def get_cleaned_data(self):
+        original = super().get_cleaned_data()
+        original["doctor_proof"] = self.validated_data.get("doctor_proof", "")
+        return original
+
+    def custom_signup(self, request, user: User):
+        user.is_active = False
+        user.is_doctor = True
+        user.doctor_proof = self.cleaned_data.get("doctor_proof")
+        user.save()
+        return super().custom_signup(request, user)

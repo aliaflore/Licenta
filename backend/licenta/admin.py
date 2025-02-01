@@ -36,8 +36,10 @@ class UserAdmin(BaseUserAdmin):
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-        (_("Doctor Information"), {"fields": ("is_doctor",)}),
+        (_("Doctor Information"), {"fields": ("is_doctor", "doctor_proof")}),
     )
+    list_display = ("username", "email", "first_name", "last_name", "is_staff", "is_active", "is_doctor")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups", "is_doctor")
 
 
 class AnalysisPDFAdmin(admin.ModelAdmin):

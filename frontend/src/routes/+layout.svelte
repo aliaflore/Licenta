@@ -32,7 +32,11 @@
 				{#snippet lead()}
 					
 		                <a href="/">
-		                    <strong class="text-xl uppercase">Licenta</strong>
+                            {#if data.user?.is_doctor}
+		                        <strong class="text-xl uppercase">Licenta: Doctor</strong>
+                            {:else}
+		                        <strong class="text-xl uppercase">Licenta: Patient</strong>
+                            {/if}
 		                </a>
 
                         <Breadcrumbs url={$page.url} routeId={$page.route.id} skipRoutesWithNoPage={false} pageData={$page.url}>

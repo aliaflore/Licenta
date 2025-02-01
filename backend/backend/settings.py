@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     "django_celery_results",
     "dj_rest_auth",
     "drf_spectacular",
-    "encrypted_model_fields"
+    "encrypted_model_fields",
+    "payments"
 ]
 
 SITE_ID = 1
@@ -187,3 +188,22 @@ FIELD_ENCRYPTION_KEY = os.environ.get('FIELD_ENCRYPTION_KEY', '')
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+
+PAYMENT_HOST = 'localhost:8000'
+PAYMENT_USES_SSL = False
+# Settings for Development
+PAYMENT_VARIANTS = {
+    'stripe': (
+        'payments.stripe.StripeProviderV3',
+        {
+            'api_key': 'sk_test_51QmGnHRuwtXrhTLiDOPhqnk8yCluyPI8TJNqhFNebBnLlwl4K1phgWz33Mg0bUkmesuZyB1yoJUOc0kGn4kKcjMq00MIUQBPNY',
+            'use_token': True,
+            'secure_endpoint': False
+        }
+    )
+}
+
+PAYMENT_MODEL = 'licenta.Payment'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
