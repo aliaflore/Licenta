@@ -1,6 +1,7 @@
 from datetime import timedelta
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.backends.signals import connection_created
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from licenta.models import AnalysisPDF, AnalysisResult, PatientInvite, User
@@ -10,6 +11,15 @@ from django.utils import timezone
 
 
 logger = logging.getLogger(__name__)
+
+
+@receiver(connection_created)
+def setup_sqlite_pragmas(sender, connection, **kwargs):
+    if connection.vendor == 'sqlite':
+        cursor = connection.cursor()
+        cursor.execute('PRAGMA journal_mode=wal;')
+        cursor.execute('PRAGMA busy_timeout=5000;')
+        cursor.close()
 
 
 @receiver(post_save, sender=AnalysisPDF)

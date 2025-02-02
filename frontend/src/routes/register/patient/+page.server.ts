@@ -23,6 +23,11 @@ export const actions = {
                 }
             }
         ));
+        if(response.ok) {
+            return {
+                message: "Registration successful. Please check your email for a verification link."
+            }
+        }
         const result = await response.json() as PatientRegisterResponse;
 
         return result;

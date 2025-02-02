@@ -10,6 +10,7 @@ export interface User {
     is_superuser: boolean;
     full_name:    string;
     date_joined:  Date;
+    is_paying:    boolean;
 }
 
 export interface Error {

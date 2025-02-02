@@ -28,6 +28,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     full_name = serializers.SerializerMethodField()
     password1 = serializers.CharField(write_only=True, required=False)
     password2 = serializers.CharField(write_only=True, required=False)
+    is_paying = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = User
@@ -45,6 +46,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "date_joined",
             "password1",
             "password2",
+            "is_paying",
         )
         read_only_fields = tuple(filter(lambda x: x not in (
             "first_name", "last_name"
@@ -286,7 +288,7 @@ class SimpleAnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
 
 class HistoryListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
-        data = sorted(data, key=lambda x: (x.category.id, x.name, x.analysis.date))
+        data = sorted(data, key=lambda x: (x.category.id, x.name, x.analysis.date or timezone.now().date()))
         an_iterator = itertools.groupby(data, lambda x: (x.category, x.name))
         results = []
 

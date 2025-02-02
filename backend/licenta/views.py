@@ -1,11 +1,15 @@
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.urls import reverse
+from django.views.generic import TemplateView
 from rest_framework import viewsets, mixins, permissions, status
 from rest_framework.decorators import action
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.exceptions import NotAuthenticated
-from licenta.models import AnalysisCategory, AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite, Payment
+from licenta.models import AnalysisCategory, AnalysisProvider, User, AnalysisPDF, Analysis, RadiographyPDF, AnalysisResult, PatientInvite
 from licenta.serializers import (
     DoctorInviteSerializer,
     DoctorRegisterSerializer,
@@ -24,11 +28,14 @@ from .tasks import add_suggestion, notify_patient_about_invite
 import logging
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
-from payments import get_payment_model, RedirectNeeded
 from dj_rest_auth.registration.views import RegisterView as BaseRegisterView
+from djstripe import settings as djstripe_settings
+from djstripe import models as djstripe_models
+import stripe
 
 
 logger = logging.getLogger(__name__)
+stripe.api_key = djstripe_settings.djstripe_settings.STRIPE_SECRET_KEY
 
 
 class PermissionIsDoctor(permissions.BasePermission):
@@ -292,21 +299,6 @@ class DoctorInvitesViewSet(
         return super().get_queryset().filter(patient=request.user)
 
 
-def payment_details(request, payment_id):
-    payment: Payment = get_object_or_404(get_payment_model(), id=payment_id)
-
-    try:
-        form = payment.get_form(data=request.POST or None)
-    except RedirectNeeded as redirect_to:
-        return redirect(str(redirect_to))
-
-    return TemplateResponse(
-        request,
-        'payment.html',
-        {'form': form, 'payment': payment}
-    )
-
-
 class DoctorRegisterView(BaseRegisterView):
     serializer_class = DoctorRegisterSerializer
 
@@ -318,3 +310,48 @@ class DoctorRegisterView(BaseRegisterView):
 
 def account_inactive(request):
     return JsonResponse({"error": "Account is inactive. Please contact the administrator."}, status=400)
+
+
+def stripe_checkout(request):
+    if not request.method == "POST":
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=400)
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "You need to be logged in to use this feature."}, status=400)
+    if request.user.is_doctor:
+        return JsonResponse({"error": "Only patients can use this feature."}, status=400)
+    if request.user.is_paying():
+        return JsonResponse({"error": "You already have a running subscription."}, status=400)
+
+    success_url = request.build_absolute_uri("/")
+    cancel_url = request.build_absolute_uri("/paywall")
+
+    id = request.user.pk
+
+    metadata = {
+        str(djstripe_settings.djstripe_settings.SUBSCRIBER_CUSTOMER_KEY): id
+    }
+    session_dict = {
+        "payment_method_types": ["card"],
+        "line_items": [
+            {
+                "price": settings.STRIPE_SUBSCRIPTION_PRICE_ID,
+                "quantity": 1,
+            },
+        ],
+        "mode": "subscription",
+        "success_url": success_url,
+        "cancel_url": cancel_url,
+        "metadata": metadata,
+    }
+
+    try:
+        customer = djstripe_models.Customer.objects.get(subscriber=request.user)
+        session = stripe.checkout.Session.create(
+            customer=customer.id, **session_dict
+        )
+    except djstripe_models.Customer.DoesNotExist:
+        session = stripe.checkout.Session.create(**session_dict)
+
+    return JsonResponse({
+        "redirect_url": session.url
+    })

@@ -26,6 +26,12 @@ export const actions = {
         ));
         const result = await response.json() as DoctorRegisterResponse;
 
+        if(response.ok) {
+            return {
+                message: "Registration successful. Please check your email for a verification link."
+            }
+        }
+
         return result;
     },
 } satisfies Actions;

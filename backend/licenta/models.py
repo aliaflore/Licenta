@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 import functools
 from encrypted_model_fields.fields import EncryptedTextField, EncryptedDateField, EncryptedMixin, EncryptedBooleanField
-from payments.models import BasePayment
+from djstripe import models as djstripe_models
 
 from licenta.helpers import RandomFileName
 
@@ -56,6 +56,9 @@ class AnalysisCategoryName(models.Model):
 class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     doctor_proof = models.FileField(upload_to=RandomFileName("doctor-proofs"), blank=True, null=True)
+
+    def is_paying(self):
+        return djstripe_models.Subscription.objects.filter(customer__subscriber=self, status="active").exists()
 
 
 class AbstractPDF(models.Model):
@@ -177,13 +180,3 @@ class PatientInvite(models.Model):
         verbose_name_plural = "Patient Invites"
         unique_together = ("doctor", "patient")
 
-
-class Payment(BasePayment):
-    def get_failure_url(self):
-        return "http://localhost:8080/failure"
-
-    def get_success_url(self):
-        return "http://localhost:8080/success"
-
-    def get_purchased_items(self):
-        return []

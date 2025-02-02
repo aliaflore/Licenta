@@ -1,10 +1,20 @@
 import type { LayoutServerLoad } from './$types';
 import type { UserResult, Error, AnalysisProviderResult } from '$lib/types';
+import { redirect } from '@sveltejs/kit';
 
 type UResult = UserResult & Error;
 type AResult = AnalysisProviderResult & Error;
 
-export const load: LayoutServerLoad = async ({ fetch }) => {
+const allowed_paywall_urls = [
+    '/login',
+    '/logout',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/paywall',
+]
+
+export const load: LayoutServerLoad = async ({ fetch, url }) => {
     const response = (await fetch(
         '/api/users/me/',
         {
@@ -18,6 +28,11 @@ export const load: LayoutServerLoad = async ({ fetch }) => {
             analysisProviders: null
         }
     }
+
+    if (!result?.user?.is_paying && !result?.user?.is_doctor && !result?.user?.is_superuser && result.user && !allowed_paywall_urls.includes(url.pathname)) {
+        redirect(301, '/paywall');
+    }
+
     const response2 = (await fetch (
         '/api/analysis-providers/',
         {
