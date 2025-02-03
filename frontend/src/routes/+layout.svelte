@@ -70,14 +70,20 @@
 								<span>Doctors</span>
 							</a>
                             {/if}
-                            {#if !data?.user?.is_doctor || $viewAsUser}
+                            {#if !data?.user?.is_doctor}
                             <a href="/analyses" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Analyses</span>
 							</a>
+                            {/if}
+                            {#if !data?.user?.is_doctor || $viewAsUser}
                             <a href="/radiographies" class="btn btn-sm variant-ghost-surface">
 								<span><AccountCircle size={30} /></span>
 								<span>Radiographies</span>
+							</a>
+                            <a href="/patient-profile/${$viewAsUser?.pk}" class="btn btn-sm variant-ghost-surface">
+								<span><AccountCircle size={30} /></span>
+								<span>Patient Profile</span>
 							</a>
                             {/if}
                             {#if !$viewAsUser}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { generateChartOptions } from './chartOptions';
 	import * as echarts from 'echarts';
 	import type { HistoryData } from '$lib/types';
