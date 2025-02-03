@@ -73,8 +73,7 @@
                         <input class="checkbox" type="checkbox" name="birth_date" checked={data?.user?.accept_new_patients} />
                         <span>Accept New Patients</span>
                     </label>
-                {/if}
-
+                {:else}
                 {#if form?.errors?.height}
                     <p class="text-red-500">{form.errors.height}</p>
                 {/if}
@@ -106,6 +105,7 @@
 					<span>Birth Date</span>
 					<input class="input" type="date" name="birth_date" value={data?.user?.birth_date} />
 				</label>
+                {/if}
 
                 {#if form?.errors?.password1}
                     <p class="text-red-500">{form.errors.password1}</p>
