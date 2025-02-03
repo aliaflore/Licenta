@@ -8,6 +8,11 @@ interface ProfileErrorResponse {
     first_name?: string;
     last_name?: string;
     non_field_errors?: string;
+    accept_new_patients?: string;
+    birth_date?: string;
+    phone_number?: string;
+    height?: string;
+    weight?: string;
 }
 
 export const actions = {

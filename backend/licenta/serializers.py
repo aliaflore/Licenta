@@ -47,9 +47,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "password1",
             "password2",
             "is_paying",
+            "accept_new_patients",
+            "birth_date",
+            "phone_number",
+            "height",
+            "weight",
         )
         read_only_fields = tuple(filter(lambda x: x not in (
-            "first_name", "last_name"
+            "first_name", "last_name", "accept_new_patients", "birth_date", "phone_number", "height", "weight"
         ), fields))
 
     def get_full_name(self, obj):
@@ -365,7 +370,6 @@ class PatientInviteSerializer(serializers.HyperlinkedModelSerializer):
             "patient",
             "email",
             "doctor",
-            "expires",
             "accepted",
             "accepted_on",
             "created",
@@ -414,7 +418,6 @@ class DoctorInviteSerializer(serializers.HyperlinkedModelSerializer):
             "patient",
             "patient_id",
             "doctor",
-            "expires",
             "accepted",
             "accepted_on",
             "created",

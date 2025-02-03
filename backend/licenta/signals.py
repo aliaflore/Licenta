@@ -56,7 +56,6 @@ def send_invite_email(sender, instance: PatientInvite, **kwargs):
 def on_accepted_set(sender, instance: PatientInvite, **kwargs):
     if instance.accepted and not instance.accepted_on:
         instance.accepted_on = timezone.now()
-        instance.expires = timezone.now() + timedelta(days=30)
 
 @receiver(post_save, sender=User)
 def on_doctor_registered(sender, instance: User, created=False, **kwargs):
@@ -95,4 +94,18 @@ def notify_doctor_about_new_analysis(sender, instance: AnalysisPDF, **kwargs):
             f"Patient {instance.user.email} has uploaded a new analysis. You can now view it.",
             settings.DEFAULT_FROM_EMAIL,
             [invite.doctor.email],
+        )
+
+
+@receiver(post_save, sender=User)
+def notify_willing_doctors_about_new_user(sender, instance: User, created=False, **kwargs):
+    if not created:
+        return
+    for doctor in User.objects.filter(is_doctor=True, accept_new_patients=True):
+        logger.info("Notifying doctor %s about new patient %s", doctor.pk, instance.pk)
+        send_mail(
+            "New patient registered",
+            f"Patient {instance.email} has registered. You can request to be their doctor.",
+            settings.DEFAULT_FROM_EMAIL,
+            [doctor.email],
         )

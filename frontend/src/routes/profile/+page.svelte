@@ -11,8 +11,8 @@
 </svelte:head>
 
 <div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<div class="flex justify-center space-x-2 flex-col gap-4">
+	<div class="space-y-4 text-center flex flex-col items-center">
+		<div class="flex justify-center space-x-2 flex-col">
             {#if form?.modified}
             <aside class="alert variant-ghost">
                 <div class="alert-message">
@@ -63,6 +63,48 @@
 				<label class="label">
 					<span>Last Name</span>
 					<input class="input" type="text" name="last_name" value={data?.user?.last_name} />
+				</label>
+
+                {#if data?.user?.is_doctor}
+                    {#if form?.errors?.accept_new_patients}
+                        <p class="text-red-500">{form.errors.accept_new_patients}</p>
+                    {/if}
+                    <label class="label">
+                        <input class="checkbox" type="checkbox" name="birth_date" checked={data?.user?.accept_new_patients} />
+                        <span>Accept New Patients</span>
+                    </label>
+                {/if}
+
+                {#if form?.errors?.height}
+                    <p class="text-red-500">{form.errors.height}</p>
+                {/if}
+				<label class="label">
+                    <span>Height</span>
+					<input class="input" type="text" name="height" value={data?.user?.height} />
+				</label>
+
+                {#if form?.errors?.weight}
+                    <p class="text-red-500">{form.errors.weight}</p>
+                {/if}
+				<label class="label">
+                    <span>Weight</span>
+					<input class="input" type="text" name="weight" value={data?.user?.weight} />
+				</label>
+
+                {#if form?.errors?.phone_number}
+                    <p class="text-red-500">{form.errors.phone_number}</p>
+                {/if}
+				<label class="label">
+                    <span>Phone Number</span>
+					<input class="input" type="tel" name="phone_number" value={data?.user?.phone_number} />
+				</label>
+
+                {#if form?.errors?.birth_date}
+                    <p class="text-red-500">{form.errors.birth_date}</p>
+                {/if}
+				<label class="label">
+					<span>Birth Date</span>
+					<input class="input" type="date" name="birth_date" value={data?.user?.birth_date} />
 				</label>
 
                 {#if form?.errors?.password1}

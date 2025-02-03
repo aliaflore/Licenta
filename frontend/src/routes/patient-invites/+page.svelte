@@ -13,6 +13,8 @@
 	import { onMount } from 'svelte';
 	import type { PatientInvite } from '$lib/types';
 	import { viewAsUser } from '$lib';
+	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
     const table = new TableHandler<PatientInvite>([], { rowsPerPage: 10 })
 
@@ -48,7 +50,6 @@
                             <th>Last Name</th>
                             <th>Full Name</th>
                             <ThSort {table} field="accepted">Accepted</ThSort>
-                            <ThSort {table} field="expires">Expires</ThSort>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -69,20 +70,13 @@
                                     {/if}
                                 </td>
                                 <td>
-                                    {#if row.expires}
-                                        <div class="flex flex-row">
-                                            {moment(row.expires).format("ddd MMM DD YYYY")}
-                                        </div>
-                                        <div class="text-gray-500 ml-2">{moment(row.expires).from(moment(new Date()))}</div>
-                                    {:else}
-                                        <div class="text-red-500">No date</div>
-                                    {/if}
-                                </td>
-                                <td>
                                     <div class="flex flex-row w-auto h-auto gap-1">
                                         {#if row.accepted}
                                         <button class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" onclick={
-                                            () => viewAsUser.set(row.patient)
+                                            () => {
+                                                viewAsUser.set(row.patient)
+                                                goto('/patient-profile/' + row.patient.pk);
+                                            }
                                         }>
                                             <BadgeAccount size={24} />
                                         </button>

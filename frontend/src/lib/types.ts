@@ -1,16 +1,21 @@
 export interface User {
-    pk:           number;
-    url:          string;
-    email:        string;
-    username:     string;
-    first_name:   string;
-    last_name:    string;
-    is_staff:     boolean;
-    is_doctor:    boolean;
-    is_superuser: boolean;
-    full_name:    string;
-    date_joined:  Date;
-    is_paying:    boolean;
+	pk: number;
+	url: string;
+	email: string;
+	username: string;
+	first_name: string;
+	last_name: string;
+	is_staff: boolean;
+	is_doctor: boolean;
+	is_superuser: boolean;
+	full_name: string;
+	date_joined: Date;
+	is_paying: boolean;
+	accept_new_patients: boolean;
+	birth_date: string;
+	phone_number: string;
+    height: number;
+    weight: number;
 }
 
 export interface Error {
@@ -121,7 +126,7 @@ export interface AnalysisResult {
 	range_max: null | string;
 	in_range: boolean | null;
 	suggestion: string;
-    approve_ai_suggestion: boolean;
+	approve_ai_suggestion: boolean;
 	doctor_note: string;
 	created: Date;
 	modified: Date;
@@ -152,28 +157,27 @@ export type RadiographyPDFResult = PaginatedResult<RadiographyPDF>;
 export type HistoryAnalysisResult = AnalysisResult & { date?: string };
 
 export interface HistoryData {
-    name:     string;
-    category: SimpleAnalysisCategory;
-    data:     HistoryAnalysisResult[];
+	name: string;
+	category: SimpleAnalysisCategory;
+	data: HistoryAnalysisResult[];
 }
 
 export interface SimpleAnalysisCategory {
-    pk:   number;
-    name: string;
+	pk: number;
+	name: string;
 }
 
 export type HistoryDataResult = HistoryData[];
 
 export interface PatientInvite {
-    url:         string;
-    pk:          number;
-    patient:     User;
-    doctor:      User;
-    expires:     Date;
-    accepted:    boolean;
-    accepted_on: Date;
-    created:     Date;
-    modified:    Date;
+	url: string;
+	pk: number;
+	patient: User;
+	doctor: User;
+	accepted: boolean;
+	accepted_on: Date;
+	created: Date;
+	modified: Date;
 }
 
 export type PatientInviteResult = PaginatedResult<PatientInvite>;

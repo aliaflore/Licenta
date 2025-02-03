@@ -46,7 +46,6 @@
                             <th>Last Name</th>
                             <th>Full Name</th>
                             <ThSort {table} field="accepted">Accepted</ThSort>
-                            <ThSort {table} field="expires">Expires</ThSort>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -67,29 +66,22 @@
                                     {/if}
                                 </td>
                                 <td>
-                                    {#if row.expires}
-                                        <div class="flex flex-row">
-                                            {moment(row.expires).format("ddd MMM DD YYYY")}
-                                        </div>
-                                        <div class="text-gray-500 ml-2">{moment(row.expires).from(moment(new Date()))}</div>
-                                    {:else}
-                                        <div class="text-red-500">No date</div>
-                                    {/if}
-                                </td>
-                                <td>
                                     <div class="flex flex-row w-auto h-auto gap-1">
+                                        {#if !row.accepted}
                                         <form method="POST" action="?/accept">
                                             <input type="hidden" name="pk" value={row.pk} />
                                             <button type="submit" class="btn-icon btn-sm bg-yellow-500 [&>*]:pointer-events-none">
                                                 <Check size={24} />
                                             </button>
                                         </form>
+                                        {:else}
                                         <form method="POST" action="?/delete">
                                             <input type="hidden" name="pk" value={row.pk} />
                                             <button type="submit" class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none">
                                                 <AccountRemove size={24} />
                                             </button>
                                         </form>
+                                        {/if}
                                     </div>
                                 </td>
                             </tr>

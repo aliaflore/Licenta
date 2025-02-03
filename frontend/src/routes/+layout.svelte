@@ -11,9 +11,9 @@
 
     import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
     import { storePopup } from '@skeletonlabs/skeleton';
-	import { Breadcrumbs } from 'svelte-breadcrumbs';
 	import { page } from '$app/stores';
 	import { viewAsUser } from '$lib';
+	import { redirect } from '@sveltejs/kit';
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	interface Props {
@@ -38,22 +38,6 @@
 		                        <strong class="text-xl uppercase">Licenta: Patient</strong>
                             {/if}
 		                </a>
-
-                        <Breadcrumbs url={$page.url} routeId={$page.route.id} skipRoutesWithNoPage={false} pageData={$page.url}>
-                            {#snippet children({ crumbs })}
-                                <ol class="breadcrumb pl-10">
-                                    {#each crumbs as crumb, i}
-                                        <!-- If crumb index is less than the breadcrumb length minus 1 -->
-                                        {#if i < crumbs.length - 1}
-                                            <li class="crumb"><a class="anchor" href={crumb.url}>{crumb.title}</a></li>
-                                            <li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
-                                        {:else}
-                                            <li class="crumb">{crumb.title}</li>
-                                        {/if}
-                                    {/each}
-                                </ol>
-                            {/snippet}
-                        </Breadcrumbs>
 					
 					{/snippet}
 				{#snippet trail()}
@@ -102,7 +86,10 @@
 								<span>My profile</span>
 							</a>
                             {:else}
-                            <button class="btn btn-sm variant-ghost-surface" onclick={() => viewAsUser.set(null)}>
+                            <button class="btn btn-sm variant-ghost-surface" onclick={() => {
+                                viewAsUser.set(null);
+                                window.location.pathname = '/patient-invites';
+                            }}>
 								<span><AccountCircle size={30} /></span>
 								<span>Viewing as: <b>{$viewAsUser.full_name}</b></span>
 							</button>

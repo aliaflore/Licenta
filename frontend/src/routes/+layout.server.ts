@@ -1,6 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import type { UserResult, Error, AnalysisProviderResult } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
+import { viewAsUser } from '$lib';
 
 type UResult = UserResult & Error;
 type AResult = AnalysisProviderResult & Error;
@@ -15,6 +16,15 @@ const allowed_paywall_urls = [
 ]
 
 export const load: LayoutServerLoad = async ({ fetch, url }) => {
+    const vu = url.searchParams.get('user');
+    if(vu) {
+        viewAsUser.subscribe((value) => {
+            if (!value || value.pk.toString() !== vu) {
+                redirect(301, '/patient-invites');
+            }
+        });
+    }
+
     const response = (await fetch(
         '/api/users/me/',
         {

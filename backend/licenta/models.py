@@ -57,6 +57,13 @@ class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     doctor_proof = models.FileField(upload_to=RandomFileName("doctor-proofs"), blank=True, null=True)
 
+    accept_new_patients = models.BooleanField(default=True)
+
+    birth_date = EncryptedDateField(null=True)
+    phone_number = EncryptedTextField(max_length=15, blank=True)
+    height = EncryptedDecimalField(max_digits=5, decimal_places=2, null=True)
+    weight = EncryptedDecimalField(max_digits=5, decimal_places=2, null=True)
+
     def is_paying(self):
         return djstripe_models.Subscription.objects.filter(customer__subscriber=self, status="active").exists()
 
@@ -168,7 +175,6 @@ class PatientInvite(models.Model):
         related_name="doctor_invites",
     )
     accepted = models.BooleanField(default=False)
-    expires = models.DateTimeField(blank=True, null=True)
 
     accepted_on = models.DateTimeField(null=True, blank=True)
 
