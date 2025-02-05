@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
-import type { Actions } from '../$types';
+import type { Actions } from './$types';
 import type { AnalysisPDF } from '$lib/types';
+import { env } from '$env/dynamic/public';
 
 interface uploadErrors {
     provider_id?: string[];
@@ -14,13 +15,14 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/radiography-pdf/',
+            env.PUBLIC_BACKEND_URL + '/api/radiography-pdf/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
 
@@ -30,7 +32,6 @@ export const actions = {
         }
 
         const result = await response.json() as uploadErrors;
-        console.log(result);
         return {
             status: response.status,
             errors: result

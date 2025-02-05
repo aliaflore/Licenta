@@ -1,150 +1,5 @@
 [
 {
-    "model": "licenta.analysisprovider",
-    "pk": 1,
-    "fields": {
-        "name": "Synevo",
-        "crops_words": {
-            "top": [
-                "Refference range",
-                "Interval de re",
-                "pentru varsta si",
-                "sexul respectiv",
-                "paitent sex and range"
-            ],
-            "bottom": [
-                "Partial duplication",
-                "Este interzisa",
-                "Suma analizelor",
-                "Partial or total",
-                "The sum"
-            ]
-        },
-        "crops_pixels": {
-            "left": 30
-        },
-        "crop_similarity": 90,
-        "line_height_tolerance": 10,
-        "word_width_tolerance": 5,
-        "line_continuation_difference_width": 200,
-        "category_similarity": 90,
-        "range_extraction_regex": [
-            {
-                "regex": "^(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
-                "min": "min",
-                "max": "max"
-            },
-            {
-                "regex": "^\\u2264 *(?P<max>[0-9\\\\.]*)$",
-                "min": 0,
-                "max": "max"
-            },
-            {
-                "regex": "^< *(?P<max>[0-9\\\\.]*)$",
-                "min": 0,
-                "max": "max"
-            },
-            {
-                "regex": "optimum: *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
-                "min": "min",
-                "max": "max"
-            },
-            {
-                "regex": "optimum: *< *(?P<max>[0-9\\\\.]*)",
-                "min": 0,
-                "max": "max"
-            },
-            {
-                "regex": "optim: *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
-                "min": "min",
-                "max": "max"
-            },
-            {
-                "regex": "optim: *< *(?P<max>[0-9\\\\.]*)",
-                "min": 0,
-                "max": "max"
-            },
-            {
-                "regex": " *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*) *: *Normal",
-                "min": "min",
-                "max": "max"
-            }
-        ],
-        "ignored_words": [
-            "LLIS",
-            "10 "
-        ],
-        "space_pixels": 5,
-        "replace_results": {},
-        "analysis_list": "https://clinicavoluntari.ro/wp-content/uploads/2023/04/Preturi-Analize-Synevo-Aprilie-2023.pdf",
-        "analysis_providedlang": "ro",
-        "analysis_list_skip_first_row": true,
-        "analysis_list_skip_first_table": true,
-        "analysis_columns": [
-            2
-        ]
-    }
-},
-{
-    "model": "licenta.analysisprovider",
-    "pk": 2,
-    "fields": {
-        "name": "Regina Maria",
-        "crops_words": {
-            "top": [
-                "Interval biologic de"
-            ],
-            "bottom": [
-                "Eliberat la",
-                "Sef laborator"
-            ]
-        },
-        "crops_pixels": {},
-        "crop_similarity": 90,
-        "line_height_tolerance": 2,
-        "word_width_tolerance": 5,
-        "line_continuation_difference_width": 200,
-        "category_similarity": 90,
-        "range_extraction_regex": [
-            {
-                "regex": "\\\\[(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)\\\\]",
-                "min": "min",
-                "max": "max"
-            },
-            {
-                "regex": "\\\\[(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)\\\\)",
-                "min": "min",
-                "max": "max"
-            },
-            {
-                "regex": "^[a-zA-Z ,]*<= *(?P<max>[0-9\\\\.]*)[a-zA-Z/ ]*$",
-                "min": 0,
-                "max": "max"
-            },
-            {
-                "regex": "^[a-zA-Z ,]*< *(?P<max>[0-9\\\\.]*)[a-zA-Z/ ]*$",
-                "min": 0,
-                "max": "max"
-            }
-        ],
-        "ignored_words": [
-            "referinta"
-        ],
-        "space_pixels": 5,
-        "replace_results": {},
-        "analysis_list": "https://www.reginamaria.ro/upload/files/Anexa-Analize-Laborator.pdf",
-        "analysis_providedlang": "ro",
-        "analysis_list_skip_first_row": false,
-        "analysis_list_skip_first_table": false,
-        "analysis_columns": [
-            0,
-            1,
-            2,
-            3
-        ]
-    }
-},
-{
     "model": "licenta.analysiscategory",
     "pk": 1767,
     "fields": {
@@ -9956,6 +9811,151 @@
     "pk": 3168,
     "fields": {
         "name": "Beryllium lymphoblastic transformation test (LTT)"
+    }
+},
+{
+    "model": "licenta.analysisprovider",
+    "pk": 1,
+    "fields": {
+        "name": "Synevo",
+        "crops_words": {
+            "top": [
+                "Refference range",
+                "Interval de re",
+                "pentru varsta si",
+                "sexul respectiv",
+                "paitent sex and range"
+            ],
+            "bottom": [
+                "Partial duplication",
+                "Este interzisa",
+                "Suma analizelor",
+                "Partial or total",
+                "The sum"
+            ]
+        },
+        "crops_pixels": {
+            "left": 30
+        },
+        "crop_similarity": 90,
+        "line_height_tolerance": 10,
+        "word_width_tolerance": 5,
+        "line_continuation_difference_width": 200,
+        "category_similarity": 90,
+        "range_extraction_regex": [
+            {
+                "regex": "^(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
+                "min": "min",
+                "max": "max"
+            },
+            {
+                "regex": "^\\u2264 *(?P<max>[0-9\\\\.]*)$",
+                "min": 0,
+                "max": "max"
+            },
+            {
+                "regex": "^< *(?P<max>[0-9\\\\.]*)$",
+                "min": 0,
+                "max": "max"
+            },
+            {
+                "regex": "optimum: *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
+                "min": "min",
+                "max": "max"
+            },
+            {
+                "regex": "optimum: *< *(?P<max>[0-9\\\\.]*)",
+                "min": 0,
+                "max": "max"
+            },
+            {
+                "regex": "optim: *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)",
+                "min": "min",
+                "max": "max"
+            },
+            {
+                "regex": "optim: *< *(?P<max>[0-9\\\\.]*)",
+                "min": 0,
+                "max": "max"
+            },
+            {
+                "regex": " *(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*) *: *Normal",
+                "min": "min",
+                "max": "max"
+            }
+        ],
+        "ignored_words": [
+            "LLIS",
+            "10 "
+        ],
+        "space_pixels": 5,
+        "replace_results": {},
+        "analysis_list": "https://clinicavoluntari.ro/wp-content/uploads/2023/04/Preturi-Analize-Synevo-Aprilie-2023.pdf",
+        "analysis_providedlang": "ro",
+        "analysis_list_skip_first_row": true,
+        "analysis_list_skip_first_table": true,
+        "analysis_columns": [
+            2
+        ]
+    }
+},
+{
+    "model": "licenta.analysisprovider",
+    "pk": 2,
+    "fields": {
+        "name": "Regina Maria",
+        "crops_words": {
+            "top": [
+                "Interval biologic de"
+            ],
+            "bottom": [
+                "Eliberat la",
+                "Sef laborator"
+            ]
+        },
+        "crops_pixels": {},
+        "crop_similarity": 90,
+        "line_height_tolerance": 2,
+        "word_width_tolerance": 5,
+        "line_continuation_difference_width": 200,
+        "category_similarity": 90,
+        "range_extraction_regex": [
+            {
+                "regex": "\\\\[(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)\\\\]",
+                "min": "min",
+                "max": "max"
+            },
+            {
+                "regex": "\\\\[(?P<min>[0-9\\\\.]*) *- *(?P<max>[0-9\\\\.]*)\\\\)",
+                "min": "min",
+                "max": "max"
+            },
+            {
+                "regex": "^[a-zA-Z ,]*<= *(?P<max>[0-9\\\\.]*)[a-zA-Z/ ]*$",
+                "min": 0,
+                "max": "max"
+            },
+            {
+                "regex": "^[a-zA-Z ,]*< *(?P<max>[0-9\\\\.]*)[a-zA-Z/ ]*$",
+                "min": 0,
+                "max": "max"
+            }
+        ],
+        "ignored_words": [
+            "referinta"
+        ],
+        "space_pixels": 5,
+        "replace_results": {},
+        "analysis_list": "https://www.reginamaria.ro/upload/files/Anexa-Analize-Laborator.pdf",
+        "analysis_providedlang": "ro",
+        "analysis_list_skip_first_row": false,
+        "analysis_list_skip_first_table": false,
+        "analysis_columns": [
+            0,
+            1,
+            2,
+            3
+        ]
     }
 },
 {

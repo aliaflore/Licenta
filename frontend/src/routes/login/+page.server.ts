@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { env } from '$env/dynamic/public';
 
 interface LoginResponse {
     username?: string;
@@ -12,13 +13,14 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/dj-rest-auth/login/',
+            env.PUBLIC_BACKEND_URL + '/api/dj-rest-auth/login/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         const result = await response.json() as LoginResponse;

@@ -68,7 +68,7 @@ export function generateChartOptions(data: HistoryData): EChartsOption | null {
         },
         visualMap: [
             {
-                show: true,
+                show: false,
                 type: 'continuous',
                 min: Math.min(-20, minPercentage),
                 max: Math.max(120, maxPercentage),

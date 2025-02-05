@@ -43,6 +43,16 @@
 		{ color: 'transparent', start: 0, end: 25 },
 		{ color: 'rgb(var(--color-surface-500))', start: 75, end: 100 }
 	];
+
+    export let columns = {
+        'id': true,
+        'uploaded_on': true,
+        'provider': true,
+        'taken_on': true,
+        'suggestion': true,
+        'doctor_notes': true,
+        'actions': true
+    };
 </script>
 
 <div class="table-container m-10 w-auto max-w-5xl">
@@ -55,26 +65,47 @@
 			<table class="table">
 				<thead>
 					<tr>
+                        {#if columns.id} 
 						<ThSort {table} field="pk">ID</ThSort>
+                        {/if}
+                        {#if columns.uploaded_on}
 						<ThSort {table} field="created">Uploaded On</ThSort>
+                        {/if}
+                        {#if columns.provider}
 						<th>Provider</th>
+                        {/if}
+                        {#if columns.taken_on}
 						<ThSort {table} field="taken_on">Taken On</ThSort>
+                        {/if}
+                        {#if columns.suggestion}
 						<th>AI Suggestion</th>
+                        {/if}
+                        {#if columns.doctor_notes}
 						<th>Doctor Notes</th>
+                        {/if}
+                        {#if columns.actions}
 						<th>Actions</th>
+                        {/if}
 					</tr>
 				</thead>
 				<tbody>
 					{#each table.rows as row}
 						<tr>
+                            {#if columns.id}
 							<td>{row.pk}</td>
+                            {/if}
+                            {#if columns.uploaded_on}
 							<td>
 								<div class="flex flex-row">
 									{moment(row.created).toLocaleString()}
 								</div>
 								<div class="text-gray-500 ml-2">{moment(row.created).from(moment(new Date()))}</div>
 							</td>
+                            {/if}
+                            {#if columns.provider}
 							<td>{row.provider.name}</td>
+                            {/if}
+                            {#if columns.taken_on}
 							<td>
 								{#if row.taken_on}
 									<div class="flex flex-row">
@@ -87,6 +118,8 @@
 									<div class="text-red-500">No date</div>
 								{/if}
 							</td>
+                            {/if}
+                            {#if columns.suggestion}
 							<td>
 								{#if row.suggestion}
 									<div class="text-green text-center">Yes</div>
@@ -94,6 +127,8 @@
 									<div class="text-red text-center">No</div>
 								{/if}
 							</td>
+                            {/if}
+                            {#if columns.doctor_notes}
 							<td>
 								{#if row.doctor_notes}
 									<div class="text-green-300">{row.doctor_notes}</div>
@@ -101,6 +136,8 @@
 									No notes
 								{/if}
 							</td>
+                            {/if}
+                            {#if columns.actions}
 							<td>
 								<div class="flex flex-row w-auto h-auto gap-1">
 									<div class="card p-4 shadow-xl" data-popup="popupDocument">
@@ -150,6 +187,7 @@
 									{/if}
 								</div>
 							</td>
+                            {/if}
 						</tr>
 					{/each}
 				</tbody>

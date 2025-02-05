@@ -3,13 +3,7 @@ import os
 
 from openai import OpenAI
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = "django-insecure-yq8em$ly3u&z^&=o=#v6_@a^(*4()tlo-9(9#n%59bqz@o=5hs"
-
-DEBUG = os.environ.get("DEBUG", True)
-
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -32,12 +26,16 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "drf_spectacular",
     "encrypted_model_fields",
-    "djstripe"
+    "djstripe",
+    'corsheaders',
 ]
 
 SITE_ID = 1
 
+import corsheaders
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -67,13 +65,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     # {
@@ -126,29 +117,6 @@ CELERY_RESULT_BACKEND = "django-db"
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
-CELERY_TASK_ALWAYS_EAGER = True
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:8000",
-]
-
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = "Licenta Tuc <licentatuc@tedyst.ro>"
-
-OPENAPI_ORGANIZATION = os.getenv("OPENAPI_ORGANIZATION")
-OPENAPI_PROJECT = os.getenv("OPENAPI_PROJECT")
-OPENAPI_KEY = os.getenv("OPENAPI_KEY")
-
-OPENAPI_CLIENT = OpenAI(
-    organization=OPENAPI_ORGANIZATION, project=OPENAPI_PROJECT, api_key=OPENAPI_KEY
-)
 
 TESSERACT_LANGUAGES = "eng+ron"
 
@@ -183,12 +151,7 @@ LOGGING = {
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
-FIELD_ENCRYPTION_KEY = os.environ.get('FIELD_ENCRYPTION_KEY', '')
-
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
-
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
-
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
@@ -198,8 +161,8 @@ REST_AUTH = {
 
 STRIPE_LIVE_MODE = False
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
-STRIPE_TEST_SECRET_KEY = os.environ.get("STRIPE_TEST_SECRET_KEY")
-STRIPE_TEST_PUBLIC_KEY = os.environ.get("STRIPE_TEST_PUBLIC_KEY")
 DJSTRIPE_SUBSCRIBER_CUSTOMER_KEY = "id"
 
 STRIPE_SUBSCRIPTION_PRICE_ID = "price_1Qo0TLRuwtXrhTLiAV3y5zlO"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")

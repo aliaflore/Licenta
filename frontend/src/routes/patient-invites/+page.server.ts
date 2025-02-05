@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { Error } from '$lib/types';
+import { env } from '$env/dynamic/public';
 
 export const actions = {
     resend: async ({ request, fetch, url, cookies }) => {
@@ -15,12 +16,13 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/patient-invites/${pk}/resend/`,
+            env.PUBLIC_BACKEND_URL + `/api/patient-invites/${pk}/resend/`,
             {
                 method: 'POST',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
 
@@ -38,12 +40,13 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/patient-invites/${pk}/`,
+            env.PUBLIC_BACKEND_URL + `/api/patient-invites/${pk}/`,
             {
                 method: 'DELETE',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
 
@@ -57,19 +60,19 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + '/api/patient-invites/',
+            env.PUBLIC_BACKEND_URL + '/api/patient-invites/',
             {
                 method: 'POST',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email }),
+                credentials: 'include',
             }
         ));
 
         const responseData = await response.json() as any;
-        console.log(responseData);
         if(responseData?.email) {
             return {
                 errors: {

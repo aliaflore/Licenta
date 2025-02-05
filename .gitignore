@@ -5,3 +5,4 @@ synevo
 analize-pdfs
 db.sqlite3
 *.pyc
+docker-compose.yml

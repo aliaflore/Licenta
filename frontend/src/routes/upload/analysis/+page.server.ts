@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
-import type { Actions } from '../$types';
+import type { Actions } from './$types';
 import type { AnalysisPDF } from '$lib/types';
+import { env } from '$env/dynamic/public';
 
 interface uploadErrors {
     provider_id?: string[];
@@ -14,13 +15,14 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/analysis-pdf/',
+            env.PUBLIC_BACKEND_URL + '/api/analysis-pdf/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
 

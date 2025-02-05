@@ -1,12 +1,14 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Analysis, HistoryDataResult } from '$lib/types';
+import { env } from '$env/dynamic/public';
 
 
 export const load: PageServerLoad = async ({ params, fetch, url }) => {
     const user = url.searchParams.get('user');
-    const response = await fetch('/api/analysis/' + params.id + '/' + (user ? `?user=${user}` : ''), {
+    const response = await fetch(env.PUBLIC_BACKEND_URL + '/api/analysis/' + params.id + '/' + (user ? `?user=${user}` : ''), {
         method: 'GET',
+        credentials: 'include',
     });
     if (!response.ok) {
         error(response.status, response.statusText);
@@ -21,8 +23,9 @@ export const load: PageServerLoad = async ({ params, fetch, url }) => {
         historyGraphParams.append('analysis', result.category.name + ':' + result.name);
     });
 
-    const histroyGraphsData = await fetch('/api/history/?' + historyGraphParams.toString(), {
+    const histroyGraphsData = await fetch(env.PUBLIC_BACKEND_URL + '/api/history/?' + historyGraphParams.toString(), {
         method: 'GET',
+        credentials: 'include',
     });
     const historyData = await histroyGraphsData.json() as HistoryDataResult;
     if (!histroyGraphsData.ok) {
@@ -48,13 +51,14 @@ export const actions = {
         const viewAsUser = data.get('viewas_user');
 
         const response = (await fetch(
-            url.origin + `/api/analysis-results/${pk}/` + (viewAsUser ? `?user=${viewAsUser}` : ''),
+            env.PUBLIC_BACKEND_URL + `/api/analysis-results/${pk}/` + (viewAsUser ? `?user=${viewAsUser}` : ''),
             {
                 method: 'PATCH',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
                 },
-                body: data
+                body: data,
+                credentials: 'include',
             }
         ));
         return {
@@ -75,12 +79,13 @@ export const actions = {
         const viewAsUser = data.get('viewas_user');
 
         const response = (await fetch(
-            url.origin + `/api/analysis-results/${pk}/regenerate_suggestions/` + (viewAsUser ? `?user=${viewAsUser}` : ''),
+            env.PUBLIC_BACKEND_URL + `/api/analysis-results/${pk}/regenerate_suggestions/` + (viewAsUser ? `?user=${viewAsUser}` : ''),
             {
                 method: 'POST',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         return;

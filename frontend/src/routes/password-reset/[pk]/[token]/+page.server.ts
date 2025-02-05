@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { env } from '$env/dynamic/public';
 
 export const load: PageServerLoad = async ({ url, params }) => {
     return {
@@ -24,18 +25,17 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/dj-rest-auth/password/reset/confirm/',
+            env.PUBLIC_BACKEND_URL + '/api/dj-rest-auth/password/reset/confirm/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         const result = await response.json() as PasswordResetResponse;
-
-        console.log(result);
 
         if (response.ok) {
             redirect(302, '/login');

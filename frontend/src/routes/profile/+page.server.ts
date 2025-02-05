@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { User } from '$lib/types';
+import { env } from '$env/dynamic/public';
 
 interface ProfileErrorResponse {
     password1?: string;
@@ -24,13 +25,14 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/users/${pk}/`,
+            env.PUBLIC_BACKEND_URL + `/api/users/${pk}/`,
             {
                 method: 'PATCH',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         const result = await response.json() as ProfileErrorResponse;
@@ -53,13 +55,14 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/users/${pk}/`,
+            env.PUBLIC_BACKEND_URL + `/api/users/${pk}/`,
             {
                 method: 'DELETE',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         if (response.ok) {

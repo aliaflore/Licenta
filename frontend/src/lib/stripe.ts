@@ -1,3 +1,5 @@
+import { env } from "$env/dynamic/public";
+
 function getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -12,12 +14,13 @@ interface CheckoutResponse {
 
 export async function checkout() {
     const response = (await fetch(
-        '/api/subscription-checkout/',
+        env.PUBLIC_BACKEND_URL + '/api/subscription-checkout/',
         {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken') || '',
             },
+            credentials: 'include',
         }
     ));
     const data = await response.json() as CheckoutResponse;

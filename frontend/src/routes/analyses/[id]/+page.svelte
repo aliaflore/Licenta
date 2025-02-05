@@ -25,6 +25,7 @@
 	import Chart from '$lib/Chart.svelte';
 	import { enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
+	import { env } from '$env/dynamic/public';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -42,7 +43,7 @@
 		selectedAnalysisHistory = data.historyData.find(
 			(r) => r.category.name === category && r.name === name
 		);
-		fetch(`/api/analysis-results/${pk}/` + (user ? `?user=${user}` : ''))
+		fetch(document.location.origin + `/api/analysis-results/${pk}/` + (user ? `?user=${user}` : ''), {credentials: 'include'})
 			.then((res) => res.json())
 			.then((res) => {
 				selectedAnalysis = res as AnalysisResult;
@@ -169,6 +170,7 @@
 										type="text"
 										placeholder="Result"
 										value={selectedAnalysis.result}
+                                        disabled
 									/>
 								</label>
 								<label class="label">
@@ -179,6 +181,7 @@
 										type="text"
 										placeholder="Measurement Unit"
 										value={selectedAnalysis.measurement_unit}
+                                        disabled
 									/>
 								</label>
 								<label class="label">
@@ -189,6 +192,7 @@
 										type="number"
 										placeholder="Minimum Range"
 										value={selectedAnalysis.range_min}
+                                        disabled
 									/>
 								</label>
 								<label class="label">
@@ -199,17 +203,8 @@
 										type="number"
 										placeholder="Maximum Range"
 										value={selectedAnalysis.range_max}
+                                        disabled
 									/>
-								</label>
-								<label class="label">
-									<input
-										name="in_range"
-										class="checkbox"
-										type="checkbox"
-										placeholder="In Range"
-										checked={selectedAnalysis.in_range}
-									/>
-									<span>In Range</span>
 								</label>
 								<label class="label">
 									<input

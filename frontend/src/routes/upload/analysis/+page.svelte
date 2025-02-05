@@ -27,6 +27,7 @@
                 <select
                     class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-surface-600"
                     name="provider_id"
+                    required
                 >
                     <option value="" disabled selected>Select a provider</option>
                     {#each data.analysisProviders || [] as provider}

@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 import type { Actions } from './$types';
 
 interface DoctorRegisterResponse {
@@ -15,13 +16,14 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/dj-rest-auth/registration-doctor/',
+            env.PUBLIC_BACKEND_URL + '/api/dj-rest-auth/registration-doctor/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         const result = await response.json() as DoctorRegisterResponse;

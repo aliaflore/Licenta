@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 import type { Actions } from './$types';
 
 interface PatientRegisterResponse {
@@ -14,13 +15,14 @@ export const actions = {
         const data = await request.formData();
 
         const response = (await fetch(
-            url.origin + '/api/dj-rest-auth/registration/',
+            env.PUBLIC_BACKEND_URL + '/api/dj-rest-auth/registration/',
             {
                 method: 'POST',
                 body: data,
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
         if(response.ok) {

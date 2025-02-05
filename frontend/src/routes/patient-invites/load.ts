@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 import type { PatientInviteResult, Error } from '$lib/types';
 import type { State } from '@vincjo/datatables/server';
 
@@ -5,9 +6,10 @@ type result = PatientInviteResult & Error;
 
 export const reload = async (state: State) => {
 	const response = await fetch(
-        `/api/patient-invites/?${getParams(state)}`, 
+        document.location.origin + `/api/patient-invites/?${getParams(state)}`, 
         {
             method: 'GET',
+            credentials: 'include',
         }
     )
 	const json = await response.json() as result;

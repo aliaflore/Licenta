@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { env } from '$env/dynamic/public';
 
 export const actions = {
     accept: async ({ request, fetch, url, cookies }) => {
@@ -14,7 +15,7 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/doctor-invites/${pk}/`,
+            env.PUBLIC_BACKEND_URL + `/api/doctor-invites/${pk}/`,
             {
                 method: 'PUT',
                 headers: {
@@ -24,6 +25,7 @@ export const actions = {
                 body: JSON.stringify({
                     accepted: true,
                 }),
+                credentials: 'include',
             }
         ));
 
@@ -41,12 +43,13 @@ export const actions = {
         }
 
         const response = (await fetch(
-            url.origin + `/api/doctor-invites/${pk}/`,
+            env.PUBLIC_BACKEND_URL + `/api/doctor-invites/${pk}/`,
             {
                 method: 'DELETE',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
                 },
+                credentials: 'include',
             }
         ));
 

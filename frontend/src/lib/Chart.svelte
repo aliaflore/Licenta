@@ -17,6 +17,13 @@
         if (options && chart) {
             chart.setOption(options, true);
         }
+        if(chartDiv) {
+            if(options && chart) {
+                chartDiv.classList.remove('hidden');
+            } else {
+                chartDiv.classList.add('hidden');
+            }
+        }
     }
 
 	onMount(() => {

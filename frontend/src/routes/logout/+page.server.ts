@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { env } from '$env/dynamic/public';
 
 export const actions = {
     default: async ({ request, fetch, url, cookies }) => {
@@ -7,12 +8,13 @@ export const actions = {
         const logout = data.get('logout')?.toString() || '';
 
         const response = (await fetch(
-            url.origin + '/api/dj-rest-auth/logout/',
+            env.PUBLIC_BACKEND_URL + '/api/dj-rest-auth/logout/',
             {
                 method: 'POST',
                 headers: {
                     "X-CSRFToken": cookies.get('csrftoken') || '',
-                }
+                },
+                credentials: 'include',
             }
         ));
 

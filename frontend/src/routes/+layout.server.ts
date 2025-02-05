@@ -2,6 +2,7 @@ import type { LayoutServerLoad } from './$types';
 import type { UserResult, Error, AnalysisProviderResult } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
 import { viewAsUser } from '$lib';
+import { env } from '$env/dynamic/public';
 
 type UResult = UserResult & Error;
 type AResult = AnalysisProviderResult & Error;
@@ -16,19 +17,11 @@ const allowed_paywall_urls = [
 ]
 
 export const load: LayoutServerLoad = async ({ fetch, url }) => {
-    const vu = url.searchParams.get('user');
-    if(vu) {
-        viewAsUser.subscribe((value) => {
-            if (!value || value.pk.toString() !== vu) {
-                redirect(301, '/patient-invites');
-            }
-        });
-    }
-
     const response = (await fetch(
-        '/api/users/me/',
+        env.PUBLIC_BACKEND_URL + '/api/users/me/',
         {
             method: 'GET',
+            credentials: 'include',
         }
     ));
     const result = await response.json() as UResult;
@@ -44,7 +37,7 @@ export const load: LayoutServerLoad = async ({ fetch, url }) => {
     }
 
     const response2 = (await fetch (
-        '/api/analysis-providers/',
+        env.PUBLIC_BACKEND_URL + '/api/analysis-providers/',
         {
             method: 'GET',
         }

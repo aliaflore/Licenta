@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/public';
 import type { AnalysisPDFResult, Error, User } from '$lib/types';
 import type { State } from '@vincjo/datatables/server';
 
@@ -5,9 +6,10 @@ type result = AnalysisPDFResult & Error;
 
 export const reload = async (state: State, viewAsUserState: User | null) => {
 	const response = await fetch(
-        `/api/analysis-pdf/?${getParams(state, viewAsUserState)}`, 
+        document.location.origin + `/api/analysis-pdf/?${getParams(state, viewAsUserState)}`, 
         {
             method: 'GET',
+            credentials: 'include',
         }
     )
 	const json = await response.json() as result;
