@@ -34,35 +34,29 @@
 </script>
 
 <div class="flex h-full border-t border-gray-300">
-    <div class="grow shrink basis-[34%] flex w-full table-container flex-col items-center">
-        <!-- <AnalysesList viewAsUser={$viewAsUser} columns={
-            {
-                'id': false,
-                'uploaded_on': true,
-                'provider': true,
-                'taken_on': true,
-                'suggestion': false,
-                'doctor_notes': false,
-                'actions': false
-            }
-        }/> -->
+    <div class="basis-[10%] grow shrink"></div>
+    <div class="grow shrink basis-[20%] flex w-full table-container flex-col items-center">
 
         <h1 class="h1 pt-20">Istoricul Analizelor</h1>
-        <div class="w-full h-full flex items-center justify-start flex-col gap-2">
-            <a href="asdasd">
-                2 days ago - Synevo
-            </a>
-            <a href="asdasd">
-                2 days ago - Synevo
-            </a>
-            <a href="asdasd">
-                2 days ago - Synevo
-            </a>
+        <div class="w-full h-full flex items-center justify-start flex-col gap-2 mt-20">
+            {#each data.analyses.results || [] as item}
+                <a href={item.file} class="w-full">
+                    <div class="bg-surface-50 w-full p-4 card shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="text-lg font-bold">{item.taken_on}</div>
+                                <!-- <div class="text-sm text-gray-500">{item.analysis_id}</div> -->
+                            </div>
+                            <div class="text-sm text-gray-500">{item.provider.name}</div>
+                        </div>
+                    </div>
+                </a>    
+            {/each}
         </div>
     </div>
 
 	<div
-		class="grow shrink basis-[66%] flex items-center justify-center overflow-x-hidden overflow-y-scroll h-[90vh] pt-60"
+		class="grow shrink basis-[70%] flex items-center justify-center overflow-x-hidden overflow-y-scroll h-[90vh] pt-60"
 	>
 
         <div class="flex items-center w-full flex-col gap-2">
