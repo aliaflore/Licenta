@@ -16,6 +16,8 @@ export const handleFetch = (async ({ event, request, fetch }) => {
 
 			event.cookies.set(name, value, {
 				path: '/',
+                httpOnly: false,
+                secure: false,
 				encode(value: string) {
 					return value;
 				}

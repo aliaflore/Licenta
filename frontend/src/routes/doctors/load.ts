@@ -6,7 +6,7 @@ type result = PatientInviteResult & Error;
 
 export const reload = async (state: State) => {
 	const response = await fetch(
-        env.PUBLIC_BACKEND_URL + `/api/doctor-invites/?${getParams(state)}`, 
+        document.location.origin + `/api/doctor-invites/?${getParams(state)}`, 
         {
             method: 'GET',
             credentials: 'include',

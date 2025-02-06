@@ -80,9 +80,6 @@
                         {#if columns.suggestion}
 						<th>AI Suggestion</th>
                         {/if}
-                        {#if columns.doctor_notes}
-						<th>Doctor Notes</th>
-                        {/if}
                         {#if columns.actions}
 						<th>Actions</th>
                         {/if}
@@ -125,15 +122,6 @@
 									<div class="text-green text-center">Yes</div>
 								{:else}
 									<div class="text-red text-center">No</div>
-								{/if}
-							</td>
-                            {/if}
-                            {#if columns.doctor_notes}
-							<td>
-								{#if row.doctor_notes}
-									<div class="text-green-300">{row.doctor_notes}</div>
-								{:else}
-									No notes
 								{/if}
 							</td>
                             {/if}
@@ -194,7 +182,7 @@
 			</table>
 			{#snippet footer()}
 				<RowCount {table} />
-				<Pagination {table} />
+                <Pagination {table} />
 			{/snippet}
 		</Datatable>
 	</div>

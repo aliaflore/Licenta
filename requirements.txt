@@ -111,5 +111,6 @@ urllib3==2.3.0 ; python_version >= "3.12" and python_version < "4.0" or python_v
 vine==5.1.0 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"
 watchdog==4.0.2 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"
 wcwidth==0.2.13 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"
+whitenoise==6.8.2 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"
 zope-event==5.0 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"
 zope-interface==7.2 ; python_version >= "3.12" and python_version < "4.0" or python_version == "3.11"

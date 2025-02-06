@@ -14,7 +14,7 @@ interface CheckoutResponse {
 
 export async function checkout() {
     const response = (await fetch(
-        env.PUBLIC_BACKEND_URL + '/api/subscription-checkout/',
+        document.location.origin + '/api/subscription-checkout/',
         {
             method: 'POST',
             headers: {

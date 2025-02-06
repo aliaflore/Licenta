@@ -88,7 +88,7 @@
 
 			<button
 				type="submit"
-				class="w-full bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
+				class="w-full variant-filled bg-primary-300 text-black text-white rounded-lg px-4 py-2"
 			>
 				Submit
 			</button>

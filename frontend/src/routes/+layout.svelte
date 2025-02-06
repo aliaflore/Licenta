@@ -4,6 +4,12 @@
 	import AccountCircle from 'svelte-material-icons/AccountCircle.svelte';
 	import AccountArrowDown from 'svelte-material-icons/AccountArrowDown.svelte';
 	import AccountQuestion from 'svelte-material-icons/AccountQuestion.svelte';
+	import Upload from 'svelte-material-icons/Upload.svelte';
+	import Doctor from 'svelte-material-icons/Doctor.svelte';
+	import TextBoxMultiple from 'svelte-material-icons/TextBoxMultiple.svelte';
+	import TextBox from 'svelte-material-icons/TextBox.svelte';
+	import AccountInjury from 'svelte-material-icons/AccountInjury.svelte';
+	import ExitToApp from 'svelte-material-icons/ExitToApp.svelte';
 	import AccountWrench from 'svelte-material-icons/AccountWrench.svelte';
 	import AccountOff from 'svelte-material-icons/AccountOff.svelte';
 	import History from 'svelte-material-icons/History.svelte';
@@ -28,7 +34,7 @@
 <AppShell>
 	{#snippet header()}
 			<!-- App Bar -->
-			<AppBar>
+			<AppBar background="bg-primary-200">
 				{#snippet lead()}
 					
 		                <a href="/">
@@ -58,60 +64,61 @@
 								<span>Setarile contului</span>
 							</a> -->
                             {#if data?.user?.is_doctor && !$viewAsUser}
-                            <a href="/patient-invites" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
+                            <a href="/patient-invites" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><AccountInjury size={30} /></span>
 								<span>Patients</span>
 							</a>
                             {:else if !$viewAsUser}
-                            <a href="/upload" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
+                            <a href="/upload" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><Upload size={30} /></span>
 								<span>Upload</span>
 							</a>
-                            <a href="/doctors" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
+                            <a href="/doctors" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><Doctor size={30} /></span>
 								<span>Doctors</span>
 							</a>
                             {/if}
                             {#if !data?.user?.is_doctor}
-                            <a href="/analyses" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
+                            <a href="/analyses" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><TextBoxMultiple size={30} /></span>
 								<span>Analyses</span>
 							</a>
                             {/if}
                             {#if !data?.user?.is_doctor || $viewAsUser}
-                            <a href="/radiographies" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
+                            <a href="/radiographies" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><TextBox size={30} /></span>
 								<span>Radiographies</span>
 							</a>
-                            <a href="/patient-profile/${$viewAsUser?.pk}" class="btn btn-sm variant-ghost-surface">
-								<span><AccountCircle size={30} /></span>
-								<span>Patient Profile</span>
-							</a>
                             {/if}
+
                             {#if !$viewAsUser}
-							<a href="/profile" class="btn btn-sm variant-ghost-surface">
+							<a href="/profile" class="btn btn-sm variant-filled bg-primary-300 text-black">
 								<span><AccountCircle size={30} /></span>
 								<span>My profile</span>
 							</a>
                             {:else}
-                            <button class="btn btn-sm variant-ghost-surface" onclick={() => {
+                            <a href="/patient-profile/{$viewAsUser?.pk}" class="btn btn-sm variant-filled bg-primary-300 text-black">
+								<span><AccountCircle size={30} /></span>
+								<span>Patient Profile</span>
+							</a>
+                            <button class="btn btn-sm variant-filled bg-primary-300 text-black" onclick={() => {
                                 viewAsUser.set(null);
                                 window.location.pathname = '/patient-invites';
                             }}>
-								<span><AccountCircle size={30} /></span>
-								<span>Viewing as: <b>{$viewAsUser.full_name}</b></span>
+								<span><ExitToApp size={30} /></span>
+								<span>Leave <b>{$viewAsUser.full_name}</b>'s profile</span>
 							</button>
                             {/if}
-                            <a href="/logout" class="btn btn-sm variant-ghost-surface">
+                            <a href="/logout" class="btn btn-sm variant-filled bg-primary-300 text-black">
                                 <span><AccountArrowDown size={30} /></span>
                                 <span>Logout</span>
                             </a>
 						{:else}
-							<a href="/register" class="btn btn-sm variant-ghost-surface">
+							<a href="/register" class="btn btn-sm variant-filled bg-primary-300 text-black">
 								<span><AccountQuestion size={30} /></span>
 								<span>Register</span>
 							</a>
-							<a href="/login" class="btn btn-sm variant-ghost-surface">
+							<a href="/login" class="btn btn-sm variant-filled bg-primary-300 text-black">
 								<span><AccountArrowDown size={30} /></span>
 								<span>Login</span>
 							</a>

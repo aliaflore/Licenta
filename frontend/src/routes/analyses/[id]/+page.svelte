@@ -32,7 +32,7 @@
 
 	const table = new TableHandler<AnalysisResult>(data.analysis.results, { rowsPerPage: 100 });
 
-	let tabSet: number = 0;
+	let tabSet: number = data.user?.is_doctor ? 0 : 1;
 
 	let selectedAnalysisHistory: HistoryData | undefined = undefined;
 	let selectedAnalysis: AnalysisResult | null = null;
@@ -76,8 +76,8 @@
 				<table class="table table-compact !table-hover !w-[50vw]">
 					<thead>
 						<tr>
+                            <ThSort {table} field="name">Name</ThSort>
 							<ThSort {table} field="category">Category</ThSort>
-							<ThSort {table} field="name">Name</ThSort>
 							<th>Result</th>
 							<th>Inspect</th>
 						</tr>
@@ -85,12 +85,10 @@
 					<tbody class="w-full">
 						{#each table.rows as row}
 							<tr>
-								<td>
-									{row.category.name}
-								</td>
-								<td>{row.name}</td>
+                                <td>{row.name}</td>
+								<td>{row.category.name}</td>
 								<td
-									class={`hover:text-black ${row.range_min === null && row.range_max == null ? '' : row.in_range ? '!bg-green-900' : '!bg-red-900'}`}
+									class={`hover:text-black ${row.range_min === null && row.range_max == null ? '' : row.in_range ? '!bg-green-200' : '!bg-red-200'}`}
 								>
 									{row.result}
 									{row.measurement_unit}
@@ -125,11 +123,15 @@
 			border=""
 			class="bg-surface-100-800-token w-full"
 		>
+            {#if data.user?.is_doctor}
 			<Tab bind:group={tabSet} name="tab1" value={0}>Analyses</Tab>
-			<Tab bind:group={tabSet} name="tab2" value={1}>Suggestions</Tab>
+            {/if}
 			{#if !data.user?.is_doctor}
+			    <Tab bind:group={tabSet} name="tab2" value={1}>Suggestions</Tab>
+            {/if}
+            {#if data.user?.is_doctor}
 				<Tab bind:group={tabSet} name="tab3" value={2}>Rezultate</Tab>
-			{/if}
+            {/if}
 			<svelte:fragment slot="panel">
 				{#if tabSet === 0}
 					<div class="flex items-center w-full flex-col gap-2 overflow-y-scroll h-[84vh]">
@@ -256,7 +258,7 @@
 					<div class="overflow-y-scroll h-[84vh]">
 						<Accordion autocollapse>
 							{#each data.analysis.results as result}
-                                {#if !result.in_range}
+                                {#if !result.in_range && result.range_min !== null && result.range_max !== null}
 								<AccordionItem>
 									<svelte:fragment slot="lead">
 										{#if result.in_range}
@@ -289,6 +291,9 @@
                                             <br/>
                                             {result.doctor_note}
 										{/if}
+                                        {#if !result.suggestion && !result.doctor_note}
+                                            <b>Pending approval by Doctor</b>
+                                        {/if}
 									</svelte:fragment>
 								</AccordionItem>
                                 {/if}
@@ -300,8 +305,8 @@
 						<table class="table table-compact !table-hover !w-[50vw]">
 							<thead>
 								<tr>
-									<ThSort {table} field="category">Category</ThSort>
 									<ThSort {table} field="name">Name</ThSort>
+									<ThSort {table} field="category">Category</ThSort>
 									<th>Result</th>
 									<th>Inspect</th>
 								</tr>
@@ -309,10 +314,8 @@
 							<tbody class="w-full">
 								{#each table.rows as row}
 									<tr>
-										<td>
-											{row.category.name}
-										</td>
-										<td>{row.name}</td>
+                                        <td>{row.name}</td>
+										<td>{row.category.name}</td>
 										<td
 											class={`hover:text-black ${row.range_min === null && row.range_max == null ? '' : row.in_range ? '!bg-green-900' : '!bg-red-900'}`}
 										>

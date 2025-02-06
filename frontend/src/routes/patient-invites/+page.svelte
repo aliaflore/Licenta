@@ -120,7 +120,7 @@
                     <label for="email" class="label">Email</label>
                     <input type="email" name="email" id="email" class="input" required />
                 </div>
-                <button type="submit" class="btn variant-filled-tertiary">Invite this user</button>
+                <button type="submit" class="btn variant-filled bg-primary-200 text-black">Invite this user</button>
             </div>
         </form>
     </div>

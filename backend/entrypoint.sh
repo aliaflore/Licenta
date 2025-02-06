@@ -4,6 +4,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
     echo "Running in production mode"
     python manage.py migrate
     python manage.py loaddata providers.json
+    # python manage.py djstripe_process_events
     exec gunicorn -c gunicorn.conf.py
 elif [ "$ENVIRONMENT" = "development" ]; then
     echo "Running in development mode"

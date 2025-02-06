@@ -4,8 +4,8 @@
             <h2 class="text-xl font-semibold">Choose an option to upload</h2>
         </div>
         <div class="flex flex-col space-y-4">
-            <a class="btn btn-secondary w-full bg-blue-500" href="upload/analysis">Upload an Analysis</a>
-            <a class="btn btn-primary w-full bg-blue-500" href="upload/radiography">Upload a Radiography</a>
+            <a class="btn btn-secondary w-full variant-filled bg-primary-300 text-black" href="upload/analysis">Upload an Analysis</a>
+            <a class="btn btn-primary w-full variant-filled bg-primary-300 text-black" href="upload/radiography">Upload a Radiography</a>
         </div>
     </div>
 </div>

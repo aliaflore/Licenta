@@ -6,7 +6,7 @@ type result = RadiographyPDFResult & Error;
 
 export const reload = async (state: State, viewAsUserState: User | null) => {
 	const response = await fetch(
-        env.PUBLIC_BACKEND_URL + `/api/radiography-pdf/?${getParams(state, viewAsUserState)}`, 
+        document.location.origin + `/api/radiography-pdf/?${getParams(state, viewAsUserState)}`, 
         {
             method: 'GET',
             credentials: 'include',

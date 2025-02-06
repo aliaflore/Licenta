@@ -85,37 +85,6 @@ def add_suggestion(result_pk: int):
     result.save()
 
 
-@shared_task
-@transaction.atomic
-def update_all_analysis_categories():
-    AnalysisCategory.objects.all().delete()
-    response = requests.get(
-        "https://docs.google.com/spreadsheets/d/12rEWTwolEPUCIuWieY94XeK7vsOMZeia1KVkdWzBFwA/export?format=csv&gid=0"
-    )
-    assert response.status_code == 200, "Wrong status code"
-    categories_df = pd.read_csv(StringIO(response.text))
-
-    categories = {}
-    for row in categories_df.iloc:
-        synonims = list(filter(lambda x: not isinstance(x, float), row[1:]))
-        if len(synonims) == 0:
-            continue
-        base = synonims[0]
-        categories[base] = synonims
-
-    created_categories = AnalysisCategory.objects.bulk_create(
-        [AnalysisCategory(name=base) for base in categories.keys()]
-    )
-    analysis_names = set()
-    for created_category, synonims in zip(created_categories, categories.values()):
-        analysis_names |= set(
-            [
-                AnalysisCategoryName(name=synonim, category=created_category)
-                for synonim in synonims
-            ]
-        )
-    AnalysisCategoryName.objects.bulk_create(analysis_names)
-
 
 @shared_task
 def import_all_analysis_categories():

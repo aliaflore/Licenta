@@ -38,8 +38,6 @@ router.register(r"history", HistoryViewSet, basename="history")
 router.register(r"patient-invites", PatientInvitesViewSet, basename="patient-invites")
 router.register(r"doctor-invites", DoctorInvitesViewSet, basename="doctor-invites")
 
-import dj_rest_auth.registration.urls
-
 
 urlpatterns = [
     path("admin/", admin.site.urls),

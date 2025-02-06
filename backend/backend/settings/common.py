@@ -32,11 +32,10 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-import corsheaders
-
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -166,3 +165,13 @@ DJSTRIPE_SUBSCRIBER_CUSTOMER_KEY = "id"
 STRIPE_SUBSCRIPTION_PRICE_ID = "price_1Qo0TLRuwtXrhTLiAV3y5zlO"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'LOCATION': os.path.join(BASE_DIR, 'uploads'),
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}

@@ -25,7 +25,7 @@ def setup_sqlite_pragmas(sender, connection, **kwargs):
 @receiver(post_save, sender=AnalysisPDF)
 def start_analysis(sender, instance: AnalysisPDF, **kwargs):
     logger.info("Scheduling analysis for analysis %s", instance.pk)
-    analyze_pdf(instance.id)
+    analyze_pdf.delay(instance.id)
 
 
 # @receiver(post_save, sender=AnalysisResult)

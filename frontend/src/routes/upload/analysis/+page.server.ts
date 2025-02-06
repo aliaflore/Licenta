@@ -32,6 +32,7 @@ export const actions = {
         }
 
         const result = await response.json() as uploadErrors;
+        console.log(result);
         return {
             status: response.status,
             errors: result

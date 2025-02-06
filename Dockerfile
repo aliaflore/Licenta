@@ -60,7 +60,7 @@ WORKDIR /app/frontend/build
 
 CMD ["node", "index.js"]
 
-FROM ubuntu:22.04 as nginxbuilder
+FROM ubuntu:22.04 AS nginxbuilder
 
 RUN apt update \
     && apt upgrade -y \
@@ -72,7 +72,7 @@ RUN git clone https://github.com/google/ngx_brotli && cd ngx_brotli && git submo
 RUN cd nginx-1.25.3 && ./configure --with-compat --add-dynamic-module=../ngx_brotli \
     && make modules
 
-FROM nginx:1.25.3 as nginx
+FROM nginx:1.25.3 AS nginx
 
 COPY --from=nginxbuilder /app/nginx-1.25.3/objs/ngx_http_brotli_static_module.so /etc/nginx/modules/
 COPY --from=nginxbuilder /app/nginx-1.25.3/objs/ngx_http_brotli_filter_module.so /etc/nginx/modules/
@@ -87,6 +87,7 @@ RUN echo 'brotli on;\n \
             image/x-icon image/x-win-bitmap text/css text/javascript text/plain text/xml;' > /etc/nginx/conf.d/brotli.conf
 
 COPY nginx.conf /etc/nginx/conf.d/svelte.conf.template
+COPY --from=production --chown=nginx /app/backend/static /var/www/static/
 
 RUN rm /etc/nginx/conf.d/default.conf
 

@@ -133,12 +133,12 @@
 					<input class="input" type="password" name="password2" />
 				</label>
 
-				<button class="w-full btn-md btn variant-filled" type="submit">Update Profile</button>
+				<button class="w-full btn-md btn variant-filled bg-primary-300 text-black" type="submit">Update Profile</button>
 			</form>
 		</div>
 		<form method="post" action="?/delete" class="w-full">
 			<input type="hidden" name="user_pk" value={data?.user?.pk} />
-			<button class="w-full btn-md btn variant-ghost !bg-red-500" type="submit"
+			<button class="w-full btn-md btn variant-ghost !bg-red-400" type="submit"
 				>Delete Account</button
 			>
 		</form>

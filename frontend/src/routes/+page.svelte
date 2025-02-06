@@ -40,7 +40,7 @@
 			<h1 class="h1 pt-20">Istoricul Analizelor</h1>
 			<div class="w-full h-full flex items-center justify-start flex-col gap-2 mt-20">
 				{#each data.analyses.results || [] as item}
-					<a href={item.file} class="w-full">
+					<a href={item.file} target="_blank" class="w-full">
 						<div class="bg-surface-50 w-full p-4 card shadow-sm">
 							<div class="flex items-center justify-between">
 								<div class="flex items-center gap-2">
