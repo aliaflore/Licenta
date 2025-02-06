@@ -138,7 +138,7 @@
 								<Chart data={selectedAnalysisHistory} height="h-60" width="w-[40vw]" />
 							</div>
 						{:else}
-							<div class="text-gray-200">Select an analysis to view the history</div>
+							<h5 class="h5">Select an analysis to view the history</h5>
 						{/if}
 
 						{#if selectedAnalysis}

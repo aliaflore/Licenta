@@ -34,8 +34,10 @@
 		                <a href="/">
                             {#if data.user?.is_doctor}
 		                        <strong class="text-xl uppercase">Licenta: Doctor</strong>
-                            {:else}
+                            {:else if data.user}
 		                        <strong class="text-xl uppercase">Licenta: Patient</strong>
+                            {:else}
+		                        <strong class="text-xl uppercase">Licenta</strong>
                             {/if}
 		                </a>
 					
