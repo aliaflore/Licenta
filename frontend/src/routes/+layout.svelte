@@ -75,7 +75,7 @@
 							</a>
                             <a href="/doctors" class="btn btn-sm variant-filled bg-primary-300 text-black">
 								<span><Doctor size={30} /></span>
-								<span>Doctors</span>
+								<span>Doctor</span>
 							</a>
                             {/if}
                             {#if !data?.user?.is_doctor}

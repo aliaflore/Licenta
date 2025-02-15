@@ -4,8 +4,8 @@
             <h2 class="text-xl font-semibold">Choose a type of account to create</h2>
         </div>
         <div class="flex flex-col space-y-4">
-            <a class="btn btn-secondary w-full bg-blue-500" href="register/doctor">Create a Doctor Account</a>
-            <a class="btn btn-primary w-full bg-blue-500" href="register/patient">Create a Patient Account</a>
+            <a class="btn btn-lg variant-filled bg-primary-300 text-black" href="register/doctor">Create a Doctor Account</a>
+            <a class="btn btn-lg variant-filled bg-primary-300 text-black" href="register/patient">Create a Patient Account</a>
         </div>
     </div>
 </div>

@@ -134,7 +134,7 @@
 									<a
 										href={row.file}
 										target="_blank"
-										class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none"
+										class="btn-icon btn-sm bg-primary-300 [&>*]:pointer-events-none"
 										use:popup={popupDocument}
 									>
 										<FileDocument size={24} />
@@ -147,16 +147,14 @@
 										{#if viewAsUser}
 											<a
 												href={`/analyses/${row.analysis_id}?user=${viewAsUser.pk}`}
-												class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none"
-												use:popup={popupInspect}
+												class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none"
 											>
 												<Play size={24} />
 											</a>
 										{:else}
 											<a
 												href={`/analyses/${row.analysis_id}`}
-												class="btn-icon btn-sm bg-blue-500 [&>*]:pointer-events-none"
-												use:popup={popupInspect}
+												class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none"
 											>
 												<Play size={24} />
 											</a>

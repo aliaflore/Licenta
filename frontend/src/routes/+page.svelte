@@ -56,7 +56,7 @@
 		</div>
 
 		<div
-			class="grow shrink basis-[70%] flex items-center justify-center overflow-x-hidden overflow-y-scroll h-[90vh] pt-60"
+			class="grow shrink basis-[70%] flex items-center justify-center overflow-x-hidden mt-2"
 		>
 			<div class="flex items-center w-full flex-col gap-2">
 				{#each data.history as item}

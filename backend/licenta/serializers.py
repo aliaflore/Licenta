@@ -262,7 +262,7 @@ class AnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SimpleAnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
-    date = serializers.DateField(source="analysis.date", read_only=True)
+    date = serializers.DateField(source="analysis.source.taken_on", read_only=True)
     analysis_id = serializers.PrimaryKeyRelatedField(
         required=False,
         source="analysis",
@@ -293,8 +293,8 @@ class SimpleAnalysisResultsSerializer(serializers.HyperlinkedModelSerializer):
 
 class HistoryListSerializer(serializers.ListSerializer):
     def to_representation(self, data):
-        data = sorted(data, key=lambda x: (x.category.id, x.name, x.analysis.date or timezone.now().date()))
-        an_iterator = itertools.groupby(data, lambda x: (x.category, x.name))
+        data = sorted(data, key=lambda x: (x.category.id, x.name, x.measurement_unit, x.analysis.source.taken_on or timezone.now().date()))
+        an_iterator = itertools.groupby(data, lambda x: (x.category, x.name, x.measurement_unit))
         results = []
 
         for key, group in an_iterator:

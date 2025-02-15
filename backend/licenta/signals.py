@@ -28,7 +28,7 @@ def start_analysis(sender, instance: AnalysisPDF, **kwargs):
     analyze_pdf.delay(instance.id)
 
 
-# @receiver(post_save, sender=AnalysisResult)
+@receiver(post_save, sender=AnalysisResult)
 def suggest_fix(sender, instance: AnalysisResult, **kwargs):
     created = kwargs.get("created", False)
     if not created:
