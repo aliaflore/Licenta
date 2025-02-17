@@ -3,7 +3,7 @@ FROM python:3.12-slim AS runner
 WORKDIR /app
 COPY requirements.txt ./
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends g++ libpq-dev librabbitmq4 libgl1-mesa-glx libglib2.0-0 && \
+    apt-get install -y --no-install-recommends g++ libpq-dev librabbitmq4 libgl1-mesa-glx libglib2.0-0 tesseract-ocr tesseract-ocr-ron tesseract-ocr-eng && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install -r requirements.txt --no-cache-dir && \

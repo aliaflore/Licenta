@@ -57,6 +57,8 @@ class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     doctor_proof = models.FileField(upload_to=RandomFileName("doctor-proofs"), blank=True, null=True)
 
+    force_paying = models.BooleanField(default=False)
+
     accept_new_patients = models.BooleanField(default=True)
 
     birth_date = EncryptedDateField(null=True)
@@ -65,7 +67,7 @@ class User(AbstractUser):
     weight = EncryptedDecimalField(max_digits=5, decimal_places=2, null=True)
 
     def is_paying(self):
-        return djstripe_models.Subscription.objects.filter(customer__subscriber=self, status="active").exists()
+        return self.force_paying or djstripe_models.Subscription.objects.filter(customer__subscriber=self, status="active").exists()
 
 
 class AbstractPDF(models.Model):

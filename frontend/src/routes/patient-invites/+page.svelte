@@ -72,7 +72,7 @@
                                 <td>
                                     <div class="flex flex-row w-auto h-auto gap-1">
                                         {#if row.accepted}
-                                        <button class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" onclick={
+                                        <button class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none" onclick={
                                             () => {
                                                 viewAsUser.set(row.patient)
                                                 goto('/patient-profile/' + row.patient.pk);
@@ -83,14 +83,14 @@
                                         {:else}
                                         <form method="POST" action="?/resend">
                                             <input type="hidden" name="pk" value={row.pk} />
-                                            <button type="submit" class="btn-icon btn-sm bg-yellow-500 [&>*]:pointer-events-none">
+                                            <button type="submit" class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none">
                                                 <EmailSync size={24} />
                                             </button>
                                         </form>
                                         {/if}
                                         <form method="POST" action="?/delete">
                                             <input type="hidden" name="pk" value={row.pk} />
-                                            <button class="btn-icon btn-sm bg-red-500 [&>*]:pointer-events-none">
+                                            <button class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none">
                                                 <TrashCan size={24} />
                                             </button>
                                         </form>

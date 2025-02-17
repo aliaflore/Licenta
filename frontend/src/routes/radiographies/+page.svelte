@@ -87,7 +87,7 @@
                                         <div class="card p-4 shadow-xl" data-popup="popupDocument">
                                             <div><p>View Document</p></div>
                                         </div>
-                                        <a href={row.file} target="_blank" class="btn-icon btn-sm bg-green-500 [&>*]:pointer-events-none" use:popup={popupDocument}>
+                                        <a href={row.file} target="_blank" class="btn-icon btn-sm bg-primary-300 text-black [&>*]:pointer-events-none" use:popup={popupDocument}>
                                             <FileDocument size={24} />
                                         </a>
                                     </div>

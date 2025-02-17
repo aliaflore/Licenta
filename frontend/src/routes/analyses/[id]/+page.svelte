@@ -274,24 +274,13 @@
 									</svelte:fragment>
 									<svelte:fragment slot="content">
 										{#if result.suggestion}
-											<b>AI Suggestion:</b>
-                                            {#if result.approve_ai_suggestion}
-                                                <b class="text-green-500">Approved by the Doctor</b>
-                                            {:else}
-                                                <b class="text-red-500">Not Approved by the Doctor</b>
-                                            {/if}
+											<b>Doctor Suggestion:</b>
                                             <br />
 											{result.suggestion}
                                             <br />
                                             <br />
                                         {/if}
-										{#if result.doctor_note}
-                                            <b>Doctor Notes:</b>
-                                            <b class="text-red-500">Additional notes written by the Doctor</b>
-                                            <br/>
-                                            {result.doctor_note}
-										{/if}
-                                        {#if !result.suggestion && !result.doctor_note}
+                                        {#if !result.suggestion}
                                             <b>Pending approval by Doctor</b>
                                         {/if}
 									</svelte:fragment>

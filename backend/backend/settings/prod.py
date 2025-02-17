@@ -20,6 +20,8 @@ CELERY_TASK_ALWAYS_EAGER = False
 CSRF_TRUSTED_ORIGINS = [
     "http://" + os.getenv("FRONTEND_URL", ""),
     "http://" + os.getenv("FRONTEND_URL", "").split(":")[0],
+    "https://" + os.getenv("FRONTEND_URL", ""),
+    "https://" + os.getenv("FRONTEND_URL", "").split(":")[0],
 ]
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
@@ -51,4 +53,26 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": os.environ.get("REDIS_URL", "redis://localhost:6379"),
     }
+}
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "licenta-unidata"
+AWS_S3_REGION_NAME = "eu-north-1"
+MINIO_ENDPOINT_URL = os.environ.get("MINIO_ENDPOINT_URL")
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "region_name": AWS_S3_REGION_NAME,
+            "endpoint_url": MINIO_ENDPOINT_URL,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }

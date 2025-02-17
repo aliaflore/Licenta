@@ -59,6 +59,7 @@
 			class="grow shrink basis-[70%] flex items-center justify-center overflow-x-hidden mt-2"
 		>
 			<div class="flex items-center w-full flex-col gap-2">
+                <h2 class="h2">Graficul Analizelor</h2>
 				{#each data.history as item}
 					<div class="bg-surface-50">
 						<Chart data={item} />

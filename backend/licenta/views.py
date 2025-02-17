@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.models import Site
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.views.generic import TemplateView
@@ -322,8 +323,10 @@ def stripe_checkout(request):
     if request.user.is_paying():
         return JsonResponse({"error": "You already have a running subscription."}, status=400)
 
-    success_url = request.build_absolute_uri("/")
-    cancel_url = request.build_absolute_uri("/paywall")
+    domain = Site.objects.get_current()
+
+    success_url = domain.domain
+    cancel_url = domain.domain + reverse("account_inactive")
 
     id = request.user.pk
 

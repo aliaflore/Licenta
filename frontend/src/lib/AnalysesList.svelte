@@ -78,7 +78,7 @@
 						<ThSort {table} field="taken_on">Taken On</ThSort>
                         {/if}
                         {#if columns.suggestion}
-						<th>AI Suggestion</th>
+						<th>Suggestion</th>
                         {/if}
                         {#if columns.actions}
 						<th>Actions</th>
